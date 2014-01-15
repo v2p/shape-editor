@@ -1,4 +1,4 @@
-define(['shapeEditor/point', 'shapeEditor/shape'], function (Point, Shape) {
+define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, Shape) {
 
     /**
      * @param x
@@ -17,7 +17,7 @@ define(['shapeEditor/point', 'shapeEditor/shape'], function (Point, Shape) {
          */
         this.radius = radius || 0;
 
-        Shape.call(this);
+        Shape.call(this, 'circle');
     }
 
     Circle.prototype = new Shape();
@@ -39,27 +39,27 @@ define(['shapeEditor/point', 'shapeEditor/shape'], function (Point, Shape) {
         raphaelElement.attr({
             fill: 'red'
         });
-    };
 
-    Circle.prototype.raphaelElementDragProcess = function(dx, dy) {
-        // TODO we can increase performance here
-        this.raphaelElement.attr({
-            cx: Math.min(
-                Math.max(this.centerPoint.x + dx, this.radius),
-                this.raphaelPaper.width - this.radius
-            ),
-            cy: Math.min(
-                Math.max(this.centerPoint.y + dy, this.radius),
-                this.raphaelPaper.height - this.radius
-            )
+        eve.on(['shape', this.shapeType, 'dragProcess'].join('.'), function(dx, dy, x, y, domEvent) {
+            // TODO we can increase performance here
+            this.raphaelElement.attr({
+                cx: Math.min(
+                    Math.max(this.centerPoint.x + dx, this.radius),
+                    this.raphaelPaper.width - this.radius
+                ),
+                cy: Math.min(
+                    Math.max(this.centerPoint.y + dy, this.radius),
+                    this.raphaelPaper.height - this.radius
+                )
+            });
         });
-    };
 
-    Circle.prototype.raphaelElementDragEnd = function() {
-        this.centerPoint.set(
-            this.raphaelElement.attr('cx'),
-            this.raphaelElement.attr('cy')
-        );
+        eve.on(['shape', this.shapeType, 'dragEnd'].join('.'), function(x, y, domEvent) {
+            this.centerPoint.set(
+                this.raphaelElement.attr('cx'),
+                this.raphaelElement.attr('cy')
+            );
+        });
     };
 
     return Circle;

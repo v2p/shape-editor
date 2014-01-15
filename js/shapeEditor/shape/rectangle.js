@@ -1,4 +1,4 @@
-define(['shapeEditor/point', 'shapeEditor/shape'], function (Point, Shape) {
+define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, Shape) {
 
     /**
      * @param x
@@ -23,7 +23,7 @@ define(['shapeEditor/point', 'shapeEditor/shape'], function (Point, Shape) {
          */
         this.height = height;
 
-        Shape.call(this);
+        Shape.call(this, 'rectangle');
     }
 
     Rectangle.prototype = new Shape();
@@ -45,26 +45,26 @@ define(['shapeEditor/point', 'shapeEditor/shape'], function (Point, Shape) {
         raphaelElement.attr({
             fill: 'blue'
         });
-    };
 
-    Rectangle.prototype.raphaelElementDragProcess = function(dx, dy) {
-        this.raphaelElement.attr({
-            x: Math.min(
-                Math.max(this.topLeftPoint.x + dx, 0),
-                this.raphaelPaper.width - this.width
-            ),
-            y: Math.min(
-                Math.max(this.topLeftPoint.y + dy, 0),
-                this.raphaelPaper.height - this.height
-            )
+        eve.on(['shape', this.shapeType, 'dragProcess'].join('.'), function(dx, dy, x, y, domEvent) {
+            this.raphaelElement.attr({
+                x: Math.min(
+                    Math.max(this.topLeftPoint.x + dx, 0),
+                    this.raphaelPaper.width - this.width
+                ),
+                y: Math.min(
+                    Math.max(this.topLeftPoint.y + dy, 0),
+                    this.raphaelPaper.height - this.height
+                )
+            });
         });
-    };
 
-    Rectangle.prototype.raphaelElementDragEnd = function() {
-        this.topLeftPoint.set(
-            this.raphaelElement.attr('x'),
-            this.raphaelElement.attr('y')
-        );
+        eve.on(['shape', this.shapeType, 'dragEnd'].join('.'), function(x, y, domEvent) {
+            this.topLeftPoint.set(
+                this.raphaelElement.attr('x'),
+                this.raphaelElement.attr('y')
+            );
+        });
     };
 
     return Rectangle;
