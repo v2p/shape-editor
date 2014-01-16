@@ -1,12 +1,13 @@
 define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, Shape) {
 
     /**
+     * @param raphaelPaper
      * @param x
      * @param y
      * @param radius
      * @constructor
      */
-    function Circle(x, y, radius) {
+    function Circle(raphaelPaper, x, y, radius) {
         /**
          * @type {Point}
          */
@@ -17,31 +18,24 @@ define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, 
          */
         this.radius = radius || 0;
 
-        Shape.call(this, 'circle');
+        Shape.apply(this, arguments);
     }
 
     Circle.prototype = new Shape();
     Circle.prototype.constructor = Circle;
 
-    Circle.prototype.addOnRaphaelPaper = function(raphaelPaper) {
+    Circle.prototype.addOnRaphaelPaper = function() {
         Shape.prototype.addOnRaphaelPaper.apply(this, arguments);
 
         this.raphaelElement = this.raphaelPaper.circle(this.centerPoint.x, this.centerPoint.y, this.radius);
 
         this.initRaphaelElement(this.raphaelElement);
-
-        return this.raphaelElement;
     };
 
     Circle.prototype.initRaphaelElement = function(raphaelElement) {
         Shape.prototype.initRaphaelElement.apply(this, arguments);
 
-        raphaelElement.attr({
-            fill: 'red'
-        });
-
-        eve.on(['shape', this.shapeType, 'dragProcess'].join('.'), function(dx, dy, x, y, domEvent) {
-            // TODO we can increase performance here
+        eve.on(['shape', 'dragProcess', this.id].join('.'), function(dx, dy, x, y, domEvent) {
             this.raphaelElement.attr({
                 cx: Math.min(
                     Math.max(this.centerPoint.x + dx, this.radius),
@@ -54,11 +48,20 @@ define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, 
             });
         });
 
-        eve.on(['shape', this.shapeType, 'dragEnd'].join('.'), function(x, y, domEvent) {
+        eve.on(['shape', 'dragEnd', this.id].join('.'), function(x, y, domEvent) {
             this.centerPoint.set(
                 this.raphaelElement.attr('cx'),
                 this.raphaelElement.attr('cy')
             );
+        });
+    };
+
+    Circle.prototype.resize = function(radius) {
+        Shape.prototype.resize.apply(this, arguments);
+
+        this.radius = radius;
+        this.raphaelElement.attr({
+            r: radius
         });
     };
 

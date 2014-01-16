@@ -1,10 +1,10 @@
-define(['shapeEditor/shape/circle', 'shapeEditor/shape/rectangle'], function (Circle, Rectangle) {
+define(['shapeEditor/shape/editable/circle'/*, 'shapeEditor/editableShape/editableRectangle'*/], function (EditableCircle, EditableRectangle) {
     return function(raphaelPaper) {
 
-        var c = new Circle(70, 20, 100);
-        c.addOnRaphaelPaper(raphaelPaper);
+        var c = new EditableCircle(raphaelPaper, 70, 20, 10);
+        var c2 = new EditableCircle(raphaelPaper, 50, 40, 10);
 
-        var r = new Rectangle(90, 90, 20, 30);
-        r.addOnRaphaelPaper(raphaelPaper);
+        /*var r = new EditableRectangle(90, 90, 20, 30);
+        r.addOnRaphaelPaper(raphaelPaper);*/
     }
 });
