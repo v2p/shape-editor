@@ -1,17 +1,11 @@
 define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, Shape) {
 
     /**
-     * @param {Shape} parentShape
      * @param {Point} attachmentPoint
      * @param {'x'|'y'} [axisRestriction]
      * @constructor
      */
-    function Handle(parentShape, attachmentPoint, axisRestriction) {
-        /**
-         * @type {Shape}
-         */
-        this.parentShape = parentShape;
-
+    function Handle(attachmentPoint, axisRestriction) {
         /**
          * @type {Point}
          */

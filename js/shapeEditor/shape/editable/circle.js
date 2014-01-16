@@ -15,10 +15,10 @@ define(['eve',  'shapeEditor/point', 'shapeEditor/shape/circle', 'shapeEditor/sh
         };
 
         this.resizeHandlers = [
-            new Handle(this, this.keyPoints.left, 'x'),
-            new Handle(this, this.keyPoints.top, 'y'),
-            new Handle(this, this.keyPoints.right, 'x'),
-            new Handle(this, this.keyPoints.bottom, 'y')
+            new Handle(this.keyPoints.left, 'x'),
+            new Handle(this.keyPoints.top, 'y'),
+            new Handle(this.keyPoints.right, 'x'),
+            new Handle(this.keyPoints.bottom, 'y')
         ];
 
         Circle.apply(this, arguments);
