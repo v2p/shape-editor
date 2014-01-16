@@ -23,35 +23,25 @@ define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, 
     Circle.prototype = new Shape();
     Circle.prototype.constructor = Circle;
 
-    Circle.prototype.addOnRaphaelPaper = function(raphaelPaper) {
-        Shape.prototype.addOnRaphaelPaper.apply(this, arguments);
-
-        this.raphaelElement = this.raphaelPaper.circle(this.centerPoint.x, this.centerPoint.y, this.radius);
-
-        this.initRaphaelElement(this.raphaelElement);
+    Circle.prototype.createRaphaelElement = function() {
+        return this.raphaelPaper.circle(this.centerPoint.x, this.centerPoint.y, this.radius);
     };
 
-    Circle.prototype.initRaphaelElement = function(raphaelElement) {
+    Circle.prototype.initRaphaelElement = function() {
         Shape.prototype.initRaphaelElement.apply(this, arguments);
 
         eve.on(['shape', 'dragProcess', this.id].join('.'), function(dx, dy, x, y, domEvent) {
-            this.raphaelElement.attr({
-                cx: Math.min(
-                    Math.max(this.centerPoint.x + dx, this.radius),
-                    this.raphaelPaper.width - this.radius
-                ),
-                cy: Math.min(
-                    Math.max(this.centerPoint.y + dy, this.radius),
-                    this.raphaelPaper.height - this.radius
-                )
-            });
-        });
-
-        eve.on(['shape', 'dragEnd', this.id].join('.'), function(x, y, domEvent) {
-            this.centerPoint.set(
-                this.raphaelElement.attr('cx'),
-                this.raphaelElement.attr('cy')
+            var validX = Math.min(
+                Math.max(x, this.radius),
+                this.raphaelPaper.width - this.radius
             );
+
+            var validY = Math.min(
+                Math.max(y, this.radius),
+                this.raphaelPaper.height - this.radius
+            );
+
+            this.setCoords(validX, validY);
         });
     };
 
@@ -62,6 +52,13 @@ define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, 
         this.raphaelElement.attr({
             r: radius
         });
+    };
+
+    Circle.prototype.setCoords = function(x, y) {
+        Shape.prototype.setCoords.apply(this, arguments);
+
+        this.raphaelElement.attr({cx: x, cy: y});
+        this.centerPoint.setCoords(x, y);
     };
 
     return Circle;

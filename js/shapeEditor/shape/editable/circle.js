@@ -28,14 +28,14 @@ define(['eve',  'shapeEditor/point', 'shapeEditor/shape/circle', 'shapeEditor/sh
     EditableCircle.prototype.constructor = EditableCircle;
 
     EditableCircle.prototype.setKeyPoints = function() {
-        this.keyPoints.left.set(this.centerPoint.x - this.radius, this.centerPoint.y);
-        this.keyPoints.top.set(this.centerPoint.x, this.centerPoint.y - this.radius);
-        this.keyPoints.right.set(this.centerPoint.x + this.radius, this.centerPoint.y);
-        this.keyPoints.bottom.set(this.centerPoint.x, this.centerPoint.y + this.radius);
+        this.keyPoints.left.setCoords(this.centerPoint.x - this.radius, this.centerPoint.y);
+        this.keyPoints.top.setCoords(this.centerPoint.x, this.centerPoint.y - this.radius);
+        this.keyPoints.right.setCoords(this.centerPoint.x + this.radius, this.centerPoint.y);
+        this.keyPoints.bottom.setCoords(this.centerPoint.x, this.centerPoint.y + this.radius);
     };
 
-    EditableCircle.prototype.addOnRaphaelPaper = function(raphaelPaper) {
-        Circle.prototype.addOnRaphaelPaper.apply(this, arguments);
+    EditableCircle.prototype.initRaphaelElement = function(raphaelElement) {
+        Circle.prototype.initRaphaelElement.apply(this, arguments);
 
         this.setKeyPoints();
 
@@ -55,6 +55,10 @@ define(['eve',  'shapeEditor/point', 'shapeEditor/shape/circle', 'shapeEditor/sh
                 resizeDispatcher.apply(self, arguments);
             });
         }
+
+        eve.on(['point', 'setCoords', self.centerPoint.id].join('.'), function() {
+            self.setKeyPoints();
+        });
     };
 
     return EditableCircle;

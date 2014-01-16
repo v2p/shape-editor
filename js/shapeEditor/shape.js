@@ -11,22 +11,34 @@ define(['eve'], function (eve) {
 
     Shape.STROKE_WIDTH = 2;
 
-    Shape.prototype.initRaphaelElement = function(raphaelElement) {
-        var self = this;
-
-        this.id = raphaelElement.id;
-
-        raphaelElement.attr({
+    Shape.prototype.getRaphaelElementAttributes = function() {
+        return {
             fill: '#fff',
             'fill-opacity': 0.5,
             'stroke-width': Shape.STROKE_WIDTH,
             stroke: '#000'
-        });
+        };
+    };
+
+    Shape.prototype.addOnRaphaelPaper = function(raphaelPaper) {
+        this.raphaelPaper = raphaelPaper;
+        this.raphaelElement = this.createRaphaelElement();
+
+        this.initRaphaelElement();
+    };
+
+    Shape.prototype.createRaphaelElement = function() {};
+
+    Shape.prototype.initRaphaelElement = function() {
+        var self = this;
+
+        this.id = this.raphaelElement.id;
+        this.raphaelElement.attr(this.getRaphaelElementAttributes());
 
         /**
          * Make element draggable, @see http://raphaeljs.com/reference.html#Element.drag
          */
-        raphaelElement.drag(
+        this.raphaelElement.drag(
             function(dx, dy, x, y, domEvent) {
                 eve(['shape', 'dragProcess', self.id].join('.'), self, dx, dy, x, y, domEvent);
             },
@@ -39,12 +51,12 @@ define(['eve'], function (eve) {
         );
     };
 
-    Shape.prototype.addOnRaphaelPaper = function(raphaelPaper) {
-        this.raphaelPaper = raphaelPaper;
-    };
-
     Shape.prototype.resize = function() {
         eve(['shape', 'resize', this.id].join('.'), this, arguments);
+    };
+
+    Shape.prototype.setCoords = function() {
+        eve(['shape', 'setCoords', this.id].join('.'), this, arguments);
     };
 
     return Shape;

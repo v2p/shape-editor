@@ -27,18 +27,31 @@ define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, 
     Handle.prototype = new Shape();
     Handle.prototype.constructor = Handle;
 
-    Handle.prototype.addOnRaphaelPaper = function() {
-        Shape.prototype.addOnRaphaelPaper.apply(this, arguments);
+    Handle.prototype.createRaphaelElement = function() {
+        return this.raphaelPaper.circle(this.attachmentPoint.x, this.attachmentPoint.y, this.radius);
+    };
 
-        this.raphaelElement = this.raphaelPaper.circle(this.attachmentPoint.x, this.attachmentPoint.y, this.radius);
+    Handle.prototype.getRaphaelElementAttributes = function() {
+        var parentAttributes = Shape.prototype.getRaphaelElementAttributes.apply(this, arguments);
 
-        this.initRaphaelElement(this.raphaelElement);
+        delete parentAttributes['fill-opacity'];
+
+        return parentAttributes;
     };
 
     Handle.prototype.initRaphaelElement = function(raphaelElement) {
         Shape.prototype.initRaphaelElement.apply(this, arguments);
-
         var self = this;
+
+        // small animation on hover:
+        self.raphaelElement.hover(
+            function() {
+                this.animate({r: self.radius + 1}, 150);
+            },
+            function() {
+                this.animate({r: self.radius}, 150);
+            }
+        );
 
         eve.on(['shape', 'dragProcess', this.id].join('.'), function(dx, dy, x, y, domEvent) {
             var self = this;
@@ -59,7 +72,7 @@ define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, 
         eve.on(['shape', 'dragStart', this.id].join('.'), function(x, y, domEvent) {
             var self = this;
 
-            eve(['handler', 'dragStart', self.id].join('.'), self, x, y, domEvent);
+            eve(['handler', 'dragStart', this.id].join('.'), self, x, y, domEvent);
         });
 
         eve.on(['shape', 'dragEnd', this.id].join('.'), function(x, y, domEvent) {
@@ -68,7 +81,7 @@ define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, 
             eve(['handler', 'dragEnd', self.id].join('.'), self, x, y, domEvent);
         });
 
-        eve.on(['point', 'set', this.attachmentPoint.id].join('.'), function(x, y) {
+        eve.on(['point', 'setCoords', this.attachmentPoint.id].join('.'), function(x, y) {
             self.raphaelElement.attr({cx: x, cy: y});
         });
     };

@@ -29,12 +29,8 @@ define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, 
     Rectangle.prototype = new Shape();
     Rectangle.prototype.constructor = Rectangle;
 
-    Rectangle.prototype.addOnRaphaelPaper = function(raphaelPaper) {
-        Shape.prototype.addOnRaphaelPaper.apply(this, arguments);
-
-        this.raphaelElement = this.raphaelPaper.rect(this.topLeftPoint.x, this.topLeftPoint.y, this.width, this.height);
-
-        this.initRaphaelElement(this.raphaelElement);
+    Circle.prototype.createRaphaelElement = function() {
+        return this.raphaelPaper.rect(this.topLeftPoint.x, this.topLeftPoint.y, this.width, this.height);
     };
 
     Rectangle.prototype.initRaphaelElement = function(raphaelElement) {

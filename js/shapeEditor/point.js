@@ -8,7 +8,7 @@ define(['eve'], function (eve) {
     function Point(x, y) {
         this.id = Point._id++;
 
-        this.set(x, y);
+        this.setCoords(x, y);
     }
 
     Point._id = 0;
@@ -17,11 +17,11 @@ define(['eve'], function (eve) {
      * @param x
      * @param y
      */
-    Point.prototype.set = function(x, y) {
+    Point.prototype.setCoords = function(x, y) {
         this.x = x || 0;
         this.y = y || 0;
 
-        eve(['point', 'set', this.id].join('.'), this, x, y);
+        eve(['point', 'setCoords', this.id].join('.'), this, x, y);
     };
 
     /**
