@@ -1,13 +1,12 @@
 define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, Shape) {
 
     /**
-     * @param raphaelPaper
      * @param x
      * @param y
      * @param radius
      * @constructor
      */
-    function Circle(raphaelPaper, x, y, radius) {
+    function Circle(x, y, radius) {
         /**
          * @type {Point}
          */
@@ -24,7 +23,7 @@ define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, 
     Circle.prototype = new Shape();
     Circle.prototype.constructor = Circle;
 
-    Circle.prototype.addOnRaphaelPaper = function() {
+    Circle.prototype.addOnRaphaelPaper = function(raphaelPaper) {
         Shape.prototype.addOnRaphaelPaper.apply(this, arguments);
 
         this.raphaelElement = this.raphaelPaper.circle(this.centerPoint.x, this.centerPoint.y, this.radius);

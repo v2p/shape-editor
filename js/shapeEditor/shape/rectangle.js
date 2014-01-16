@@ -1,14 +1,13 @@
 define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, Shape) {
 
     /**
-     * @param raphaelPaper
      * @param x
      * @param y
      * @param {Number} width
      * @param {Number} height
      * @constructor
      */
-    function Rectangle(raphaelPaper, x, y, width, height) {
+    function Rectangle(x, y, width, height) {
         /**
          * @type {Point}
          */
@@ -30,7 +29,7 @@ define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, 
     Rectangle.prototype = new Shape();
     Rectangle.prototype.constructor = Rectangle;
 
-    Rectangle.prototype.addOnRaphaelPaper = function() {
+    Rectangle.prototype.addOnRaphaelPaper = function(raphaelPaper) {
         Shape.prototype.addOnRaphaelPaper.apply(this, arguments);
 
         this.raphaelElement = this.raphaelPaper.rect(this.topLeftPoint.x, this.topLeftPoint.y, this.width, this.height);

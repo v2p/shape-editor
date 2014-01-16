@@ -1,19 +1,25 @@
 define(['eve',  'shapeEditor/point', 'shapeEditor/shape/circle', 'shapeEditor/shape/special/handle'], function (eve, Point, Circle, Handle) {
 
     /**
-     * @param raphaelPaper
      * @param x
      * @param y
      * @param radius
      * @constructor
      */
-    function EditableCircle(raphaelPaper, x, y, radius) {
+    function EditableCircle(x, y, radius) {
         this.keyPoints = {
             left: new Point(),
             top: new Point(),
             right: new Point(),
             bottom: new Point()
         };
+
+        this.resizeHandlers = [
+            new Handle(this, this.keyPoints.left, 'x'),
+            new Handle(this, this.keyPoints.top, 'y'),
+            new Handle(this, this.keyPoints.right, 'x'),
+            new Handle(this, this.keyPoints.bottom, 'y')
+        ];
 
         Circle.apply(this, arguments);
     }
@@ -28,16 +34,10 @@ define(['eve',  'shapeEditor/point', 'shapeEditor/shape/circle', 'shapeEditor/sh
         this.keyPoints.bottom.set(this.centerPoint.x, this.centerPoint.y + this.radius);
     };
 
-    EditableCircle.prototype.addOnRaphaelPaper = function() {
+    EditableCircle.prototype.addOnRaphaelPaper = function(raphaelPaper) {
         Circle.prototype.addOnRaphaelPaper.apply(this, arguments);
 
         this.setKeyPoints();
-        this.resizeHandlers = [
-            new Handle(this, this.keyPoints.left, 'x'),
-            new Handle(this, this.keyPoints.top, 'y'),
-            new Handle(this, this.keyPoints.right, 'x'),
-            new Handle(this, this.keyPoints.bottom, 'y')
-        ];
 
         var self = this;
         var resizeDispatcher = function(dx, dy, x, y) {
@@ -49,6 +49,8 @@ define(['eve',  'shapeEditor/point', 'shapeEditor/shape/circle', 'shapeEditor/sh
         };
 
         for (var i = 0; i < this.resizeHandlers.length; i++) {
+            this.resizeHandlers[i].addOnRaphaelPaper(this.raphaelPaper);
+
             eve.on(['handler', 'dragProcess', this.resizeHandlers[i].id].join('.'), function() {
                 resizeDispatcher.apply(self, arguments);
             });

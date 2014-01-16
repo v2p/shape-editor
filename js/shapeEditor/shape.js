@@ -1,17 +1,12 @@
 define(['eve'], function (eve) {
 
     /**
-     * @param raphaelPaper
      * @constructor
      */
-    function Shape(raphaelPaper) {
+    function Shape() {
         this.id = null;
-        this.raphaelPaper = raphaelPaper || null;
+        this.raphaelPaper = null;
         this.raphaelElement = null;
-
-        if (this.raphaelPaper) {
-            this.addOnRaphaelPaper();
-        }
     }
 
     Shape.STROKE_WIDTH = 2;
@@ -44,7 +39,9 @@ define(['eve'], function (eve) {
         );
     };
 
-    Shape.prototype.addOnRaphaelPaper = function() {};
+    Shape.prototype.addOnRaphaelPaper = function(raphaelPaper) {
+        this.raphaelPaper = raphaelPaper;
+    };
 
     Shape.prototype.resize = function() {
         eve(['shape', 'resize', this.id].join('.'), this, arguments);

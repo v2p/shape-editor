@@ -21,7 +21,7 @@ define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, 
 
         this.radius = 4;
 
-        Shape.call(this, this.parentShape.raphaelPaper);
+        Shape.call(this);
     }
 
     Handle.prototype = new Shape();
