@@ -49,6 +49,10 @@ define(['eve'], function (eve) {
                 eve(['shape', 'dragEnd', self.id].join('.'), self, x, y, domEvent);
             }
         );
+
+        this.raphaelElement.click(function() {
+            eve(['shape', 'click', self.id].join('.'), self);
+        });
     };
 
     Shape.prototype.resize = function() {

@@ -1,4 +1,4 @@
-define(['shapeEditor/shape/editable/circle'/*, 'shapeEditor/editableShape/editableRectangle'*/], function (EditableCircle, EditableRectangle) {
+define(['eve', 'shapeEditor/shape/editable/circle'/*, 'shapeEditor/editableShape/editableRectangle'*/], function (eve, EditableCircle, EditableRectangle) {
     return function(raphaelPaper) {
 
         var c = new EditableCircle(70, 20, 10);

@@ -48,31 +48,32 @@ define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, 
         );
 
         eve.on(['shape', 'dragProcess', this.id].join('.'), function(dx, dy, x, y, domEvent) {
-            var self = this;
-
-            if (self.axisRestriction == 'x') {
+            if (this.axisRestriction == 'x') {
                 dy = 0;
-                y = self.attachmentPoint.y;
             }
 
-            if (self.axisRestriction == 'y') {
+            if (this.axisRestriction == 'y') {
                 dx = 0;
-                x = self.attachmentPoint.x;
             }
 
-            eve(['handler', 'dragProcess', self.id].join('.'), self, dx, dy, x, y, domEvent);
+            x = this._tempPointX + dx;
+            y = this._tempPointY + dy;
+
+            eve(['handler', 'dragProcess', this.id].join('.'), this, dx, dy, x, y, domEvent);
         });
 
         eve.on(['shape', 'dragStart', this.id].join('.'), function(x, y, domEvent) {
-            var self = this;
+            this._tempPointX = this.attachmentPoint.x;
+            this._tempPointY = this.attachmentPoint.y;
 
-            eve(['handler', 'dragStart', this.id].join('.'), self, x, y, domEvent);
+            eve(['handler', 'dragStart', this.id].join('.'), this, x, y, domEvent);
         });
 
         eve.on(['shape', 'dragEnd', this.id].join('.'), function(x, y, domEvent) {
-            var self = this;
+            delete this._tempPointX;
+            delete this._tempPointY;
 
-            eve(['handler', 'dragEnd', self.id].join('.'), self, x, y, domEvent);
+            eve(['handler', 'dragEnd', this.id].join('.'), this, x, y, domEvent);
         });
 
         eve.on(['point', 'setCoords', this.attachmentPoint.id].join('.'), function(x, y) {

@@ -30,18 +30,28 @@ define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, 
     Circle.prototype.initRaphaelElement = function() {
         Shape.prototype.initRaphaelElement.apply(this, arguments);
 
+        eve.on(['shape', 'dragStart', this.id].join('.'), function(x, y, domEvent) {
+            this._tempPointX = this.centerPoint.x;
+            this._tempPointY = this.centerPoint.y;
+        });
+
         eve.on(['shape', 'dragProcess', this.id].join('.'), function(dx, dy, x, y, domEvent) {
             var validX = Math.min(
-                Math.max(x, this.radius),
+                Math.max(this._tempPointX + dx, this.radius),
                 this.raphaelPaper.width - this.radius
             );
 
             var validY = Math.min(
-                Math.max(y, this.radius),
+                Math.max(this._tempPointY + dy, this.radius),
                 this.raphaelPaper.height - this.radius
             );
 
             this.setCoords(validX, validY);
+        });
+
+        eve.on(['shape', 'dragEnd', this.id].join('.'), function(x, y, domEvent) {
+            delete this._tempPointX;
+            delete this._tempPointY;
         });
     };
 
