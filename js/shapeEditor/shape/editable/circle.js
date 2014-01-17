@@ -44,7 +44,7 @@ define(['eve',  'shapeEditor/point', 'shapeEditor/shape/circle', 'shapeEditor/sh
         var self = this;
         var resizeDispatcher = function(dx, dy, x, y) {
             self.resize(
-                Math.sqrt(Math.pow(x - this.centerPoint.x, 2) + Math.pow(y - this.centerPoint.y, 2))
+                Point.calculateDistance(x, y, this.centerPoint.x, this.centerPoint.y)
             );
         };
 
