@@ -59,6 +59,10 @@ define(['eve',  'shapeEditor/point', 'shapeEditor/shape/circle', 'shapeEditor/sh
         eve.on(['point', 'setCoords', self.centerPoint.id].join('.'), function() {
             self.setKeyPoints();
         });
+
+        eve.on(['shape', 'click', this.id].join('.'), function() {
+            eve(['editableShape', 'click', self.id].join('.'), self, arguments);
+        });
     };
 
     EditableCircle.prototype.resize = function(radius) {

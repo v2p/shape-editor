@@ -131,6 +131,10 @@ define(['eve',  'shapeEditor/point', 'shapeEditor/shape/rectangle', 'shapeEditor
         eve.on(['point', 'setCoords', self.topLeftPoint.id].join('.'), function() {
             self.setKeyPoints();
         });
+
+        eve.on(['shape', 'click', this.id].join('.'), function() {
+            eve(['editableShape', 'click', self.id].join('.'), self, arguments);
+        });
     };
 
     return EditableRectangle;

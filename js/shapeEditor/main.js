@@ -1,13 +1,21 @@
 define(['eve', 'shapeEditor/shape/editable/circle', 'shapeEditor/shape/editable/rectangle'], function (eve, EditableCircle, EditableRectangle) {
     return function(raphaelPaper) {
+        var self = this;
 
-        var c = new EditableCircle(70, 20, 10);
-        c.addOnRaphaelPaper(raphaelPaper);
+        self.createCircle = function(x, y) {
+            var c = new EditableCircle(x, y, 10);
+            c.addOnRaphaelPaper(raphaelPaper);
+        };
 
-        var c2 = new EditableCircle(50, 40, 10);
-        c2.addOnRaphaelPaper(raphaelPaper);
+        self.createRectangle = function(x, y) {
+            var r = new EditableRectangle(x, y, 20, 20);
+            r.addOnRaphaelPaper(raphaelPaper);
+        };
 
-        var r = new EditableRectangle(90, 90, 20, 30);
-        r.addOnRaphaelPaper(raphaelPaper);
+        eve.on(['editableShape', 'click', '*'].join('.'), function() {
+            console.log(this);
+        });
+
+        return self;
     }
 });
