@@ -44,8 +44,6 @@ define(['eve',  'shapeEditor/point', 'shapeEditor/shape/circle', 'shapeEditor/sh
             self.resize(
                 Math.sqrt(Math.pow(x - this.centerPoint.x, 2) + Math.pow(y - this.centerPoint.y, 2))
             );
-
-            self.setKeyPoints();
         };
 
         for (var i = 0; i < this.resizeHandlers.length; i++) {
@@ -53,6 +51,7 @@ define(['eve',  'shapeEditor/point', 'shapeEditor/shape/circle', 'shapeEditor/sh
 
             eve.on(['handler', 'dragProcess', this.resizeHandlers[i].id].join('.'), function() {
                 resizeDispatcher.apply(self, arguments);
+                self.setKeyPoints();
             });
         }
 
