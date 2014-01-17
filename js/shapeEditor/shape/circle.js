@@ -89,5 +89,13 @@ define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, 
         this.centerPoint.remove();
     };
 
+    Circle.prototype.getData = function() {
+        return {
+            x: this.centerPoint.x,
+            y: this.centerPoint.y,
+            radius: this.radius
+        };
+    };
+
     return Circle;
 });

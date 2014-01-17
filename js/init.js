@@ -6,7 +6,7 @@ define(['raphael', 'shapeEditor/main'], function (Raphael, ShapeEditor) {
         },
 
         onShapeCreate: function(shape) {
-            console.log(shape);
+            console.log(shape.getData());
         }
     });
 

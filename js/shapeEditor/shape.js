@@ -75,5 +75,9 @@ define(['eve'], function (eve) {
         eve.off(['shape', 'setCoords', this.id].join('.'));
     };
 
+    Shape.prototype.getData = function() {
+        return {};
+    };
+
     return Shape;
 });

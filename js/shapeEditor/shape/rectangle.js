@@ -94,5 +94,14 @@ define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, 
         this.topLeftPoint.remove();
     };
 
+    Rectangle.prototype.getData = function() {
+        return {
+            x: this.topLeftPoint.x,
+            y: this.topLeftPoint.y,
+            width: this.width,
+            height: this.height
+        };
+    };
+
     return Rectangle;
 });
