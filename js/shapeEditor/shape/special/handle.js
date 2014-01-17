@@ -81,5 +81,15 @@ define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, 
         });
     };
 
+    Handle.prototype.removeFromPaper = function() {
+        Shape.prototype.removeFromPaper.apply(this, arguments);
+
+        this.attachmentPoint.remove();
+
+        eve.off(['handler', 'dragProcess', this.id].join('.'));
+        eve.off(['handler', 'dragStart', this.id].join('.'));
+        eve.off(['handler', 'dragEnd', this.id].join('.'));
+    };
+
     return Handle;
 });

@@ -63,5 +63,17 @@ define(['eve'], function (eve) {
         eve(['shape', 'setCoords', this.id].join('.'), this, arguments);
     };
 
+    Shape.prototype.removeFromPaper = function() {
+        this.raphaelElement.remove();
+
+        eve.off(['shape', 'dragProcess', this.id].join('.'));
+        eve.off(['shape', 'dragStart', this.id].join('.'));
+        eve.off(['shape', 'dragEnd', this.id].join('.'));
+
+        eve.off(['shape', 'click', this.id].join('.'));
+        eve.off(['shape', 'resize', this.id].join('.'));
+        eve.off(['shape', 'setCoords', this.id].join('.'));
+    };
+
     return Shape;
 });

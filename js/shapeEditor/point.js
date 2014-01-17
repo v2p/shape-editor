@@ -39,5 +39,10 @@ define(['eve'], function (eve) {
         eve(['point', 'move', this.id].join('.'), this, dx, dy, this.x, this.y);
     };
 
+    Point.prototype.remove = function() {
+        eve.off(['point', 'setCoords', this.id].join('.'));
+        eve.off(['point', 'move', this.id].join('.'));
+    };
+
     return Point;
 });

@@ -88,5 +88,11 @@ define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, 
         this.topLeftPoint.setCoords(x, y);
     };
 
+    Rectangle.prototype.removeFromPaper = function() {
+        Shape.prototype.removeFromPaper.apply(this, arguments);
+
+        this.topLeftPoint.remove();
+    };
+
     return Rectangle;
 });

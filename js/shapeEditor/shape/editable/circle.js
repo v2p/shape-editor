@@ -73,5 +73,15 @@ define(['eve',  'shapeEditor/point', 'shapeEditor/shape/circle', 'shapeEditor/sh
         this.setKeyPoints(); // TODO move to eve
     };
 
+    EditableCircle.prototype.removeFromPaper = function() {
+        Circle.prototype.removeFromPaper.apply(this, arguments);
+
+        for (var i = 0; i < this.resizeHandlers.length; i++) {
+            this.resizeHandlers[i].removeFromPaper();
+        }
+
+        eve.off(['editableShape', 'click', this.id].join('.'));
+    };
+
     return EditableCircle;
 });

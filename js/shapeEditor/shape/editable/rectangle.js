@@ -137,5 +137,15 @@ define(['eve',  'shapeEditor/point', 'shapeEditor/shape/rectangle', 'shapeEditor
         });
     };
 
+    EditableRectangle.prototype.removeFromPaper = function() {
+        Rectangle.prototype.removeFromPaper.apply(this, arguments);
+
+        for (var i = 0; i < this.resizeHandlersConfig.length; i++) {
+            this.resizeHandlersConfig[i][0].removeFromPaper();
+        }
+
+        eve.off(['editableShape', 'click', this.id].join('.'));
+    };
+
     return EditableRectangle;
 });

@@ -83,5 +83,11 @@ define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, 
         this.centerPoint.setCoords(x, y);
     };
 
+    Circle.prototype.removeFromPaper = function() {
+        Shape.prototype.removeFromPaper.apply(this, arguments);
+
+        this.centerPoint.remove();
+    };
+
     return Circle;
 });
