@@ -36,6 +36,9 @@ define(['eve',  'shapeEditor/point', 'shapeEditor/shape/rectangle', 'shapeEditor
     EditableRectangle.prototype = new Rectangle();
     EditableRectangle.prototype.constructor = EditableRectangle;
 
+    EditableRectangle.MIN_WIDTH = 12;
+    EditableRectangle.MIN_HEIGHT = 12;
+
     EditableRectangle.prototype.setKeyPoints = function() {
         this.keyPoints.leftTop.setCoords(this.topLeftPoint.x, this.topLeftPoint.y);
         this.keyPoints.top.setCoords(this.topLeftPoint.x + this.width / 2, this.topLeftPoint.y);
@@ -49,33 +52,58 @@ define(['eve',  'shapeEditor/point', 'shapeEditor/shape/rectangle', 'shapeEditor
 
     EditableRectangle.prototype.resizeDispatchers = {
         leftTop: function(dx, dy, x, y) {
+            x = Math.max(0, Math.min(x, this.topLeftPoint.x + this.width - EditableRectangle.MIN_WIDTH));
+            y = Math.max(0, Math.min(y, this.topLeftPoint.y + this.height - EditableRectangle.MIN_HEIGHT));
 
+            this.resize(x, y, this.width - (x - this.topLeftPoint.x), this.height - (y - this.topLeftPoint.y));
         },
         top: function(dx, dy, x, y) {
+            y = Math.max(0, Math.min(y, this.topLeftPoint.y + this.height - EditableRectangle.MIN_HEIGHT));
 
+            this.resize(this.topLeftPoint.x, y, this.width, this.height - (y - this.topLeftPoint.y));
         },
         rightTop: function(dx, dy, x, y) {
+            x = Math.min(x, this.raphaelPaper.width);
+            y = Math.max(0, Math.min(y, this.topLeftPoint.y + this.height - EditableRectangle.MIN_HEIGHT));
 
+            this.resize(this.topLeftPoint.x, y, x - this.topLeftPoint.x, this.height - (y - this.topLeftPoint.y));
         },
         right: function(dx, dy, x, y) {
+            x = Math.min(x, this.raphaelPaper.width);
 
+            this.resize(this.topLeftPoint.x, this.topLeftPoint.y, x - this.topLeftPoint.x, this.height);
         },
         rightBottom: function(dx, dy, x, y) {
-            this.resize(this.topLeftPoint.x, this.topLeftPoint.y, this.width + dx, this.height + dy);
-            this.setKeyPoints();
+            x = Math.min(x, this.raphaelPaper.width);
+            y = Math.min(y, this.raphaelPaper.height);
+
+            this.resize(this.topLeftPoint.x, this.topLeftPoint.y, x - this.topLeftPoint.x, y - this.topLeftPoint.y);
         },
         bottom: function(dx, dy, x, y) {
+            y = Math.min(y, this.raphaelPaper.height);
 
-        },
-        leftTop: function(dx, dy, x, y) {
-
+            this.resize(this.topLeftPoint.x, this.topLeftPoint.y, this.width, y - this.topLeftPoint.y);
         },
         bottomLeft: function(dx, dy, x, y) {
+            x = Math.max(0, Math.min(x, this.topLeftPoint.x + this.width - EditableRectangle.MIN_WIDTH));
+            y = Math.min(y, this.raphaelPaper.height);
 
+            this.resize(x, this.topLeftPoint.y, this.width - (x - this.topLeftPoint.x), y - this.topLeftPoint.y);
         },
         left: function(dx, dy, x, y) {
+            x = Math.max(0, Math.min(x, this.topLeftPoint.x + this.width - EditableRectangle.MIN_WIDTH));
 
+            this.resize(x, this.topLeftPoint.y, this.width - (x - this.topLeftPoint.x), this.height);
         }
+    };
+
+    EditableRectangle.prototype.resize = function(x, y, width, height) {
+        width = Math.max(width, EditableRectangle.MIN_WIDTH);
+        height = Math.max(height, EditableRectangle.MIN_HEIGHT);
+
+        Rectangle.prototype.resize.call(this, x, y, width, height);
+
+        this.setKeyPoints(); // TODO move to eve
     };
 
     EditableRectangle.prototype.initRaphaelElement = function(raphaelElement) {
@@ -85,18 +113,19 @@ define(['eve',  'shapeEditor/point', 'shapeEditor/shape/rectangle', 'shapeEditor
 
         var self = this;
 
-        var handleElement = null;
-        var resizeDispatcher = null;
-
         for (var i = 0; i < this.resizeHandlersConfig.length; i++) {
-            handleElement = this.resizeHandlersConfig[i][0];
+            var handleElement = this.resizeHandlersConfig[i][0],
             resizeDispatcher = this.resizeHandlersConfig[i][1];
 
             handleElement.addOnRaphaelPaper(this.raphaelPaper);
 
-            eve.on(['handler', 'dragProcess', handleElement.id].join('.'), function() {
-                resizeDispatcher.apply(self, arguments);
-            });
+            eve.on(['handler', 'dragProcess', handleElement.id].join('.'), (function() {
+                var dispatcherClosure = resizeDispatcher;
+
+                return function() {
+                    dispatcherClosure.apply(self, arguments);
+                }
+            })());
         }
 
         eve.on(['point', 'setCoords', self.topLeftPoint.id].join('.'), function() {

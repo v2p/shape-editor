@@ -64,7 +64,11 @@ define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, 
     Rectangle.prototype.resize = function(x, y, width, height) {
         Shape.prototype.resize.apply(this, arguments);
 
-        console.log(arguments);
+        x = Math.min(Math.max(0, x), this.raphaelPaper.width);
+        y = Math.min(Math.max(0, y), this.raphaelPaper.height);
+        width = Math.max(0, width);
+        height = Math.max(0, height);
+
         this.width = width;
         this.height = height;
         this.topLeftPoint.setCoords(x, y);

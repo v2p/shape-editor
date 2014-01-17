@@ -27,6 +27,8 @@ define(['eve',  'shapeEditor/point', 'shapeEditor/shape/circle', 'shapeEditor/sh
     EditableCircle.prototype = new Circle();
     EditableCircle.prototype.constructor = EditableCircle;
 
+    EditableCircle.MIN_RADIUS = 7;
+
     EditableCircle.prototype.setKeyPoints = function() {
         this.keyPoints.left.setCoords(this.centerPoint.x - this.radius, this.centerPoint.y);
         this.keyPoints.top.setCoords(this.centerPoint.x, this.centerPoint.y - this.radius);
@@ -51,13 +53,20 @@ define(['eve',  'shapeEditor/point', 'shapeEditor/shape/circle', 'shapeEditor/sh
 
             eve.on(['handler', 'dragProcess', this.resizeHandlers[i].id].join('.'), function() {
                 resizeDispatcher.apply(self, arguments);
-                self.setKeyPoints();
             });
         }
 
         eve.on(['point', 'setCoords', self.centerPoint.id].join('.'), function() {
             self.setKeyPoints();
         });
+    };
+
+    EditableCircle.prototype.resize = function(radius) {
+        radius = Math.max(radius, EditableCircle.MIN_RADIUS);
+
+        Circle.prototype.resize.call(this, radius);
+
+        this.setKeyPoints(); // TODO move to eve
     };
 
     return EditableCircle;
