@@ -1,11 +1,15 @@
 define(['raphael', 'shapeEditor/main'], function (Raphael, ShapeEditor) {
 
     var shapeEditor = new ShapeEditor(Raphael('paper-container'), {
-        onShapeClick: function(shape) {
-            this.removeShape(shape);
+        onShapeClick: function(shape) {},
+
+        onShapeCreate: function(shape) {},
+
+        onShapeDrag: function(shape) {
+            console.log(shape.getData());
         },
 
-        onShapeCreate: function(shape) {
+        onShapeResize: function(shape) {
             console.log(shape.getData());
         }
     });

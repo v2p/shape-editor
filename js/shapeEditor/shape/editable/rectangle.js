@@ -135,6 +135,14 @@ define(['eve',  'shapeEditor/point', 'shapeEditor/shape/rectangle', 'shapeEditor
         eve.on(['shape', 'click', this.id].join('.'), function() {
             eve(['editableShape', 'click', self.id].join('.'), self, arguments);
         });
+
+        eve.on(['shape', 'dragEnd', this.id].join('.'), function() {
+            eve(['editableShape', 'dragEnd', self.id].join('.'), self, arguments);
+        });
+
+        eve.on(['shape', 'resize', this.id].join('.'), function() {
+            eve(['editableShape', 'resize', self.id].join('.'), self, arguments);
+        });
     };
 
     EditableRectangle.prototype.removeFromPaper = function() {

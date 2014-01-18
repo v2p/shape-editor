@@ -30,6 +30,18 @@ define(['eve', 'shapeEditor/shape/editable/circle', 'shapeEditor/shape/editable/
             self.eventHandlers.onShapeClick && self.eventHandlers.onShapeClick.call(self, shapeObject);
         });
 
+        eve.on(['editableShape', 'dragEnd', '*'].join('.'), function() {
+            var shapeObject = this;
+
+            self.eventHandlers.onShapeDrag && self.eventHandlers.onShapeDrag.call(self, shapeObject);
+        });
+
+        eve.on(['editableShape', 'resize', '*'].join('.'), function() {
+            var shapeObject = this;
+
+            self.eventHandlers.onShapeResize && self.eventHandlers.onShapeResize.call(self, shapeObject);
+        });
+
         return self;
     }
 });
