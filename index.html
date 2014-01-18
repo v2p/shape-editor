@@ -3,14 +3,14 @@
 <head>
     <title>Shape Editor Sandbox</title>
 
-    <script src="js/jquery-1.9.1.min.js"></script>
-    <script src="js/require.js" data-main="js/init"></script>
+    <script src="lib/require.js" data-main="js/init"></script>
 
     <script>
         require.config({
             baseUrl: 'js',
             paths: {
-                "jquery" : 'jquery-loader'
+                "eve" : 'lib/eve',
+                "raphael" : 'lib/raphael'
             }
         });
     </script>
