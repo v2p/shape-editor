@@ -126,6 +126,10 @@ define(['eve',  'shapeEditor/point', 'shapeEditor/shape/rectangle', 'shapeEditor
                     dispatcherClosure.apply(self, arguments);
                 }
             })());
+
+            eve.on(['handler', 'dragEnd', handleElement.id].join('.'), function() {
+                eve(['editableShape', 'resizeEnd', self.id].join('.'), self, arguments);
+            });
         }
 
         eve.on(['point', 'setCoords', self.topLeftPoint.id].join('.'), function() {
@@ -138,10 +142,6 @@ define(['eve',  'shapeEditor/point', 'shapeEditor/shape/rectangle', 'shapeEditor
 
         eve.on(['shape', 'dragEnd', this.id].join('.'), function() {
             eve(['editableShape', 'dragEnd', self.id].join('.'), self, arguments);
-        });
-
-        eve.on(['shape', 'resize', this.id].join('.'), function() {
-            eve(['editableShape', 'resize', self.id].join('.'), self, arguments);
         });
     };
 

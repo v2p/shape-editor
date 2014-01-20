@@ -54,6 +54,10 @@ define(['eve',  'shapeEditor/point', 'shapeEditor/shape/circle', 'shapeEditor/sh
             eve.on(['handler', 'dragProcess', this.resizeHandlers[i].id].join('.'), function() {
                 resizeDispatcher.apply(self, arguments);
             });
+
+            eve.on(['handler', 'dragEnd', this.resizeHandlers[i].id].join('.'), function() {
+                eve(['editableShape', 'resizeEnd', self.id].join('.'), self, arguments);
+            });
         }
 
         eve.on(['point', 'setCoords', self.centerPoint.id].join('.'), function() {
@@ -66,10 +70,6 @@ define(['eve',  'shapeEditor/point', 'shapeEditor/shape/circle', 'shapeEditor/sh
 
         eve.on(['shape', 'dragEnd', this.id].join('.'), function() {
             eve(['editableShape', 'dragEnd', self.id].join('.'), self, arguments);
-        });
-
-        eve.on(['shape', 'resize', this.id].join('.'), function() {
-            eve(['editableShape', 'resize', self.id].join('.'), self, arguments);
         });
     };
 

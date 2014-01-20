@@ -4,6 +4,8 @@ define(['eve', 'shapeEditor/shape/editable/circle', 'shapeEditor/shape/editable/
         shapeObject.addOnRaphaelPaper(this.raphaelPaper);
 
         this.eventHandlers.onShapeCreate && this.eventHandlers.onShapeCreate.call(this, shapeObject);
+
+        return shapeObject;
     };
 
     return function(raphaelPaper, eventHandlers) {
@@ -12,12 +14,12 @@ define(['eve', 'shapeEditor/shape/editable/circle', 'shapeEditor/shape/editable/
         self.raphaelPaper = raphaelPaper;
         self.eventHandlers = eventHandlers || {};
 
-        self.createCircle = function(x, y) {
-            createShape.call(self, new EditableCircle(x, y, 10));
+        self.createCircle = function(x, y, radius) {
+            return createShape.call(self, new EditableCircle(x, y, radius));
         };
 
-        self.createRectangle = function(x, y) {
-            createShape.call(self, new EditableRectangle(x, y, 20, 20));
+        self.createRectangle = function(x, y, width, height) {
+            return createShape.call(self, new EditableRectangle(x, y, width, height));
         };
 
         self.removeShape = function(shapeObject) {
@@ -36,7 +38,7 @@ define(['eve', 'shapeEditor/shape/editable/circle', 'shapeEditor/shape/editable/
             self.eventHandlers.onShapeDrag && self.eventHandlers.onShapeDrag.call(self, shapeObject);
         });
 
-        eve.on(['editableShape', 'resize', '*'].join('.'), function() {
+        eve.on(['editableShape', 'resizeEnd', '*'].join('.'), function() {
             var shapeObject = this;
 
             self.eventHandlers.onShapeResize && self.eventHandlers.onShapeResize.call(self, shapeObject);
