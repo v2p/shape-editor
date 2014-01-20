@@ -14,6 +14,6 @@ define(['../lib/raphael', 'shapeEditor/main'], function (Raphael, ShapeEditor) {
         }
     });
 
-    shapeEditor.createRectangle(5, 5);
-    shapeEditor.createCircle(12, 12);
+    shapeEditor.createRectangle(5, 5, 20, 20);
+    shapeEditor.createCircle(12, 12, 10);
 });
