@@ -9,12 +9,23 @@
 
     <script>
         require.config({
-            baseUrl: 'src',
             paths: {
-                "eve" : '../lib/eve',
-                "raphael" : '../lib/raphael',
-                "jasmine" : '../lib/jasmine-1.3.1/jasmine',
-                "jasmine-html" : '../lib/jasmine-1.3.1/jasmine-html'
+                "eve" : '/lib/eve',
+                "raphael" : '/lib/raphael',
+                "jasmine" : '/lib/jasmine-1.3.1/jasmine',
+                "jasmine-html" : '/lib/jasmine-1.3.1/jasmine-html',
+
+                "spec" : '/spec',
+                "shapeEditor" : '/src/shapeEditor'
+            },
+            shim: {
+                jasmine: {
+                    exports: 'jasmine'
+                },
+                'jasmine-html': {
+                    deps: ['jasmine'],
+                    exports: 'jasmine'
+                }
             }
         });
     </script>
