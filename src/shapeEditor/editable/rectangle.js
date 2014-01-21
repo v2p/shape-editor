@@ -1,4 +1,4 @@
-define(['eve',  'shapeEditor/point', 'shapeEditor/shape/rectangle', 'shapeEditor/shape/special/handle'], function (eve, Point, Rectangle, Handle) {
+define(['eve',  'shapeEditor/point', 'shapeEditor/rectangle', 'shapeEditor/special/handle'], function (eve, Point, Rectangle, Handle) {
 
     /**
      * @param x

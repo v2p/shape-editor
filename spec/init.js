@@ -6,8 +6,8 @@ require(['jasmine', 'jasmine-html'], function (jasmine) {
 
     var specs = [];
 
-    specs.push('spec/shapeEditor/shape/editable/circle');
-    specs.push('spec/shapeEditor/shape/editable/rectangle');
+    specs.push('spec/shapeEditor/editable/circle');
+    specs.push('spec/shapeEditor/editable/rectangle');
 
     (function execJasmine() {
         require(specs, function() {

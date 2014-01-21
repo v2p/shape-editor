@@ -1,4 +1,4 @@
-define(['jasmine', 'eve',  'shapeEditor/point', 'shapeEditor/shape/rectangle', 'shapeEditor/shape/special/handle'], function (jasmine, eve, Point, Rectangle, Handle) {
+define(['jasmine', 'eve',  'shapeEditor/point', 'shapeEditor/rectangle', 'shapeEditor/special/handle'], function (jasmine, eve, Point, Rectangle, Handle) {
 
     describe("Editable Rectangle", function () {
         var editableRectangle;
@@ -7,7 +7,7 @@ define(['jasmine', 'eve',  'shapeEditor/point', 'shapeEditor/shape/rectangle', '
             editableRectangle = new Rectangle(1, 2, 3, 4);
         });
 
-        it("shape ID should be defined", function () {
+        it("ID should be defined", function () {
             expect(editableRectangle.id).toBeDefined();
         });
 
@@ -28,6 +28,17 @@ define(['jasmine', 'eve',  'shapeEditor/point', 'shapeEditor/shape/rectangle', '
             expect(editableRectangle.height).toEqual(4);
         });
 
+        it("should have getData method", function () {
+            expect(editableRectangle.getData).toBeDefined();
+        });
+
+        it("should have addOnRaphaelPaper method", function () {
+            expect(editableRectangle.addOnRaphaelPaper).toBeDefined();
+        });
+
+        it("should have removeFromPaper method", function () {
+            expect(editableRectangle.removeFromPaper).toBeDefined();
+        });
     });
 
 });

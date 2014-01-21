@@ -1,4 +1,4 @@
-define(['jasmine', 'eve',  'shapeEditor/point', 'shapeEditor/shape/circle', 'shapeEditor/shape/special/handle'], function (jasmine, eve, Point, Circle, Handle) {
+define(['jasmine', 'eve',  'shapeEditor/point', 'shapeEditor/circle', 'shapeEditor/special/handle'], function (jasmine, eve, Point, Circle, Handle) {
 
     describe("Editable Circle", function () {
         var editableCircle;
@@ -7,7 +7,7 @@ define(['jasmine', 'eve',  'shapeEditor/point', 'shapeEditor/shape/circle', 'sha
             editableCircle = new Circle(1, 2, 3);
         });
 
-        it("shape ID should be defined", function () {
+        it("ID should be defined", function () {
             expect(editableCircle.id).toBeDefined();
         });
 
@@ -24,6 +24,17 @@ define(['jasmine', 'eve',  'shapeEditor/point', 'shapeEditor/shape/circle', 'sha
             expect(editableCircle.radius).toEqual(3);
         });
 
+        it("should have getData method", function () {
+            expect(editableCircle.getData).toBeDefined();
+        });
+
+        it("should have addOnRaphaelPaper method", function () {
+            expect(editableCircle.addOnRaphaelPaper).toBeDefined();
+        });
+
+        it("should have removeFromPaper method", function () {
+            expect(editableCircle.removeFromPaper).toBeDefined();
+        });
     });
 
 });

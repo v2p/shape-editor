@@ -1,4 +1,4 @@
-define(['eve', 'shapeEditor/shape/editable/circle', 'shapeEditor/shape/editable/rectangle'], function (eve, EditableCircle, EditableRectangle) {
+define(['eve', 'shapeEditor/editable/circle', 'shapeEditor/editable/rectangle'], function (eve, EditableCircle, EditableRectangle) {
 
     var createShape = function(shapeObject) {
         shapeObject.addOnRaphaelPaper(this.raphaelPaper);
