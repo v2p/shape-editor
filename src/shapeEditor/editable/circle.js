@@ -8,7 +8,6 @@ define(['eve',  'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/
      */
     function EditableCircle(x, y, radius) {
         this.circle = new Circle(x, y, radius);
-        this.syncWithCircle();
 
         this.keyPoints = {
             left: new Point(),
@@ -24,6 +23,8 @@ define(['eve',  'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/
             new Handle(this.keyPoints.bottom, 'y')
         ];
 
+        this.updateKeyPoints();
+
         EditableShape.apply(this, arguments);
     }
 
@@ -32,35 +33,34 @@ define(['eve',  'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/
 
     EditableCircle.MIN_RADIUS = 7;
 
-    EditableCircle.prototype.syncWithCircle = function() {
-        this.id = this.circle.id;
-        this.radius = this.circle.radius;
-        this.centerPoint = this.circle.centerPoint;
-    };
-
     EditableCircle.prototype.updateKeyPoints = function() {
         EditableShape.prototype.updateKeyPoints.apply(this, arguments);
 
-        this.syncWithCircle();
+        var centerPoint = this.circle.centerPoint,
+            radius = this.circle.radius;
 
-        this.keyPoints.left.setCoords(this.centerPoint.x - this.radius, this.centerPoint.y);
-        this.keyPoints.top.setCoords(this.centerPoint.x, this.centerPoint.y - this.radius);
-        this.keyPoints.right.setCoords(this.centerPoint.x + this.radius, this.centerPoint.y);
-        this.keyPoints.bottom.setCoords(this.centerPoint.x, this.centerPoint.y + this.radius);
+        this.keyPoints.left.setCoords(centerPoint.x - radius, centerPoint.y);
+        this.keyPoints.top.setCoords(centerPoint.x, centerPoint.y - radius);
+        this.keyPoints.right.setCoords(centerPoint.x + radius, centerPoint.y);
+        this.keyPoints.bottom.setCoords(centerPoint.x, centerPoint.y + radius);
+    };
+
+    var resizeDispatcher = function(dx, dy, x, y) {
+        var radius = Point.calculateDistance(x, y, this.circle.centerPoint.x, this.circle.centerPoint.y);
+
+        this.circle.resize(
+            Math.max(radius, EditableCircle.MIN_RADIUS)
+        );
+
+        this.updateKeyPoints();
     };
 
     EditableCircle.prototype.init = function() {
-        // TODO think about refactoring
-        this.circle.addOnRaphaelPaper(this.raphaelPaper);
-        this.updateKeyPoints();
-
         EditableShape.prototype.init.apply(this, arguments);
 
-        var self = this;
-        var resizeDispatcher = function(dx, dy, x, y) {
-            self.resize(Point.calculateDistance(x, y, this.centerPoint.x, this.centerPoint.y));
-        };
+        this.circle.addOnRaphaelPaper(this.raphaelPaper);
 
+        var self = this;
         for (var i = 0; i < this.resizeHandlers.length; i++) {
             this.resizeHandlers[i].addOnRaphaelPaper(this.raphaelPaper);
 
@@ -73,27 +73,18 @@ define(['eve',  'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/
             });
         }
 
-        // TODO probably better to listen circle's events
-        eve.on(['point', 'setCoords', self.centerPoint.id].join('.'), function() {
+        // work with centerPoint's event faster than with circle's event:
+        eve.on(['point', 'setCoords', this.circle.centerPoint.id].join('.'), function() {
             self.updateKeyPoints();
         });
 
-        eve.on(['shape', 'click', this.id].join('.'), function() {
+        eve.on(['shape', 'click', this.circle.id].join('.'), function() {
             eve(['editableShape', 'click', self.id].join('.'), self, arguments);
         });
 
-        eve.on(['shape', 'dragEnd', this.id].join('.'), function() {
+        eve.on(['shape', 'dragEnd', this.circle.id].join('.'), function() {
             eve(['editableShape', 'dragEnd', self.id].join('.'), self, arguments);
         });
-    };
-
-    EditableCircle.prototype.resize = function(radius) {
-        EditableShape.prototype.resize.apply(this, arguments);
-
-        radius = Math.max(radius, EditableCircle.MIN_RADIUS);
-        this.circle.resize(radius);
-
-        this.updateKeyPoints();
     };
 
     EditableCircle.prototype.removeFromPaper = function() {

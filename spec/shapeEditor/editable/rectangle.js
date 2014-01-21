@@ -1,35 +1,23 @@
-define(['jasmine', 'eve',  'shapeEditor/point', 'shapeEditor/rectangle', 'shapeEditor/special/handle'], function (jasmine, eve, Point, Rectangle, Handle) {
+define(['jasmine', 'shapeEditor/editable/rectangle'], function (jasmine, EditableRectangle) {
 
-    describe("Editable Rectangle", function () {
+    describe("Editable Rectangle public interface", function () {
         var editableRectangle;
 
         beforeEach(function() {
-            editableRectangle = new Rectangle(1, 2, 3, 4);
-        });
-
-        it("ID should be defined", function () {
-            expect(editableRectangle.id).toBeDefined();
-        });
-
-        it("topLeftPoint should be Point", function () {
-            expect(editableRectangle.topLeftPoint).toEqual(jasmine.any(Point));
-        });
-
-        it("topLeftPoint should be correct", function () {
-            expect(editableRectangle.topLeftPoint.x).toEqual(1);
-            expect(editableRectangle.topLeftPoint.y).toEqual(2);
-        });
-
-        it("width should be correct", function () {
-            expect(editableRectangle.width).toEqual(3);
-        });
-
-        it("height should be correct", function () {
-            expect(editableRectangle.height).toEqual(4);
+            editableRectangle = new EditableRectangle(1, 2, 3, 4);
         });
 
         it("should have getData method", function () {
             expect(editableRectangle.getData).toBeDefined();
+        });
+
+        it("getData should return correct info", function () {
+            expect(editableRectangle.getData()).toEqual({
+                x: 1,
+                y: 2,
+                width: 3,
+                height: 4
+            });
         });
 
         it("should have addOnRaphaelPaper method", function () {

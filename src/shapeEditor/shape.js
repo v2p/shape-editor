@@ -4,11 +4,12 @@ define(['eve'], function (eve) {
      * @constructor
      */
     function Shape() {
-        this.id = null;
+        this.id = Shape._id++;
         this.raphaelPaper = null;
         this.raphaelElement = null;
     }
 
+    Shape._id = 0;
     Shape.STROKE_WIDTH = 2;
 
     Shape.prototype.getRaphaelElementAttributes = function() {
@@ -32,7 +33,6 @@ define(['eve'], function (eve) {
     Shape.prototype.initRaphaelElement = function() {
         var self = this;
 
-        this.id = this.raphaelElement.id;
         this.raphaelElement.attr(this.getRaphaelElementAttributes());
 
         /**
