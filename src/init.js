@@ -1,7 +1,15 @@
 require(['../lib/raphael', 'shapeEditor/main'], function (Raphael, ShapeEditor) {
 
     var shapeEditor = new ShapeEditor(Raphael('paper-container'), {
-        onShapeClick: function(shape) {},
+        onShapeClick: function(shape) {
+            if (shape._selected) {
+                shape._selected = false;
+                shape.showResizeHandles();
+            } else {
+                shape._selected = true;
+                shape.hideResizeHandles();
+            }
+        },
 
         onShapeCreate: function(shape) {},
 

@@ -59,21 +59,21 @@ define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, 
             x = this._tempPointX + dx;
             y = this._tempPointY + dy;
 
-            eve(['handler', 'dragProcess', this.id].join('.'), this, dx, dy, x, y, domEvent);
+            eve(['handle', 'dragProcess', this.id].join('.'), this, dx, dy, x, y, domEvent);
         });
 
         eve.on(['shape', 'dragStart', this.id].join('.'), function(x, y, domEvent) {
             this._tempPointX = this.attachmentPoint.x;
             this._tempPointY = this.attachmentPoint.y;
 
-            eve(['handler', 'dragStart', this.id].join('.'), this, x, y, domEvent);
+            eve(['handle', 'dragStart', this.id].join('.'), this, x, y, domEvent);
         });
 
         eve.on(['shape', 'dragEnd', this.id].join('.'), function(x, y, domEvent) {
             delete this._tempPointX;
             delete this._tempPointY;
 
-            eve(['handler', 'dragEnd', this.id].join('.'), this, x, y, domEvent);
+            eve(['handle', 'dragEnd', this.id].join('.'), this, x, y, domEvent);
         });
 
         eve.on(['point', 'setCoords', this.attachmentPoint.id].join('.'), function(x, y) {
@@ -86,9 +86,17 @@ define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, 
 
         this.attachmentPoint.remove();
 
-        eve.off(['handler', 'dragProcess', this.id].join('.'));
-        eve.off(['handler', 'dragStart', this.id].join('.'));
-        eve.off(['handler', 'dragEnd', this.id].join('.'));
+        eve.off(['handle', 'dragProcess', this.id].join('.'));
+        eve.off(['handle', 'dragStart', this.id].join('.'));
+        eve.off(['handle', 'dragEnd', this.id].join('.'));
+    };
+
+    Handle.prototype.show = function() {
+        this.raphaelElement.show();
+    };
+
+    Handle.prototype.hide = function() {
+        this.raphaelElement.hide();
     };
 
     return Handle;

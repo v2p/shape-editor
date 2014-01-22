@@ -1,10 +1,16 @@
 define(['eve'], function (eve) {
 
     /**
+     * @param {Handle[]} [resizeHandles]
      * @constructor
      */
-    function EditableShape() {
+    function EditableShape(resizeHandles) {
         this.id = EditableShape._id++;
+
+        /**
+         * @type {Handle[]}
+         */
+        this.resizeHandles = resizeHandles || [];
     }
 
     EditableShape._id = 0;
@@ -19,9 +25,30 @@ define(['eve'], function (eve) {
 
     EditableShape.prototype.updateKeyPoints = function() {};
 
-    EditableShape.prototype.removeFromPaper = function() {};
+    EditableShape.prototype.removeFromPaper = function() {
+        for (var i = 0; i < this.resizeHandles.length; i++) {
+            this.resizeHandles[i].removeFromPaper();
+        }
+
+        eve.off(['editableShape', 'click', this.id].join('.'));
+        eve.off(['editableShape', 'dragEnd', this.id].join('.'));
+    };
 
     EditableShape.prototype.getData = function() {};
+
+    EditableShape.prototype.hideResizeHandles = function() {
+        for(var i = 0; i < this.resizeHandles.length; i++) {
+            console.log(this.resizeHandles[i]);
+            this.resizeHandles[i].hide();
+        }
+    };
+
+    EditableShape.prototype.showResizeHandles = function() {
+        for(var i = 0; i < this.resizeHandles.length; i++) {
+            console.log(this.resizeHandles[i]);
+            this.resizeHandles[i].show();
+        }
+    };
 
     return EditableShape;
 });

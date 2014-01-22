@@ -21,20 +21,32 @@ define(['eve', 'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/r
             left: new Point()
         };
 
-        this.resizeHandlersConfig = [
-            [new Handle(this.keyPoints.leftTop), this.resizeDispatchers.leftTop],
-            [new Handle(this.keyPoints.top, 'y'), this.resizeDispatchers.top],
-            [new Handle(this.keyPoints.rightTop), this.resizeDispatchers.rightTop],
-            [new Handle(this.keyPoints.right, 'x'), this.resizeDispatchers.right],
-            [new Handle(this.keyPoints.rightBottom), this.resizeDispatchers.rightBottom],
-            [new Handle(this.keyPoints.bottom, 'y'), this.resizeDispatchers.bottom],
-            [new Handle(this.keyPoints.bottomLeft), this.resizeDispatchers.bottomLeft],
-            [new Handle(this.keyPoints.left, 'x'), this.resizeDispatchers.left]
+        var resizeHandles = [
+            new Handle(this.keyPoints.leftTop),
+            new Handle(this.keyPoints.top, 'y'),
+            new Handle(this.keyPoints.rightTop),
+            new Handle(this.keyPoints.right, 'x'),
+            new Handle(this.keyPoints.rightBottom),
+            new Handle(this.keyPoints.bottom, 'y'),
+            new Handle(this.keyPoints.bottomLeft),
+            new Handle(this.keyPoints.left, 'x')
+        ];
+
+        // mapping (by array indexes) between handle and related resizeDispatcher:
+        this.resizeDispatchersMap = [
+            this.resizeDispatchers.leftTop,
+            this.resizeDispatchers.top,
+            this.resizeDispatchers.rightTop,
+            this.resizeDispatchers.right,
+            this.resizeDispatchers.rightBottom,
+            this.resizeDispatchers.bottom,
+            this.resizeDispatchers.bottomLeft,
+            this.resizeDispatchers.left
         ];
 
         this.updateKeyPoints();
 
-        EditableShape.apply(this, arguments);
+        EditableShape.call(this, resizeHandles);
     }
 
     EditableRectangle.prototype = new EditableShape();
@@ -44,6 +56,8 @@ define(['eve', 'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/r
     EditableRectangle.MIN_HEIGHT = 12;
 
     EditableRectangle.prototype.updateKeyPoints = function() {
+        EditableShape.prototype.updateKeyPoints.apply(this, arguments);
+
         var topLeftPoint = this.rectangle.topLeftPoint,
             width = this.rectangle.width,
             height = this.rectangle.height;
@@ -60,48 +74,73 @@ define(['eve', 'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/r
 
     EditableRectangle.prototype.resizeDispatchers = {
         leftTop: function(dx, dy, x, y) {
-            x = Math.max(0, Math.min(x, this.rectangle.topLeftPoint.x + this.rectangle.width - EditableRectangle.MIN_WIDTH));
-            y = Math.max(0, Math.min(y, this.rectangle.topLeftPoint.y + this.rectangle.height - EditableRectangle.MIN_HEIGHT));
+            var topLeftPoint = this.rectangle.topLeftPoint,
+                width = this.rectangle.width,
+                height = this.rectangle.height;
 
-            this.rectangle.resize(x, y, this.rectangle.width - (x - this.rectangle.topLeftPoint.x), this.rectangle.height - (y - this.rectangle.topLeftPoint.y));
+            x = Math.max(0, Math.min(x, topLeftPoint.x + width - EditableRectangle.MIN_WIDTH));
+            y = Math.max(0, Math.min(y, topLeftPoint.y + height - EditableRectangle.MIN_HEIGHT));
+
+            this.rectangle.resize(x, y, width - (x - topLeftPoint.x), height - (y - topLeftPoint.y));
         },
         top: function(dx, dy, x, y) {
-            y = Math.max(0, Math.min(y, this.rectangle.topLeftPoint.y + this.rectangle.height - EditableRectangle.MIN_HEIGHT));
+            var topLeftPoint = this.rectangle.topLeftPoint,
+                height = this.rectangle.height,
+                width = this.rectangle.width;
 
-            this.rectangle.resize(this.rectangle.topLeftPoint.x, y, this.rectangle.width, this.rectangle.height - (y - this.rectangle.topLeftPoint.y));
+            y = Math.max(0, Math.min(y, topLeftPoint.y + height - EditableRectangle.MIN_HEIGHT));
+
+            this.rectangle.resize(topLeftPoint.x, y, width, height - (y - topLeftPoint.y));
         },
         rightTop: function(dx, dy, x, y) {
-            x = Math.min(x, this.raphaelPaper.width);
-            y = Math.max(0, Math.min(y, this.rectangle.topLeftPoint.y + this.rectangle.height - EditableRectangle.MIN_HEIGHT));
+            var topLeftPoint = this.rectangle.topLeftPoint,
+                height = this.rectangle.height;
 
-            this.rectangle.resize(this.rectangle.topLeftPoint.x, y, x - this.rectangle.topLeftPoint.x, this.rectangle.height - (y - this.rectangle.topLeftPoint.y));
+            x = Math.min(x, this.raphaelPaper.width);
+            y = Math.max(0, Math.min(y, topLeftPoint.y + height - EditableRectangle.MIN_HEIGHT));
+
+            this.rectangle.resize(topLeftPoint.x, y, x - topLeftPoint.x, height - (y - topLeftPoint.y));
         },
         right: function(dx, dy, x, y) {
+            var topLeftPoint = this.rectangle.topLeftPoint,
+                height = this.rectangle.height;
+
             x = Math.min(x, this.raphaelPaper.width);
 
-            this.resize(this.rectangle.topLeftPoint.x, this.rectangle.topLeftPoint.y, x - this.rectangle.topLeftPoint.x, this.rectangle.height);
+            this.resize(topLeftPoint.x, topLeftPoint.y, x - topLeftPoint.x, height);
         },
         rightBottom: function(dx, dy, x, y) {
+            var topLeftPoint = this.rectangle.topLeftPoint;
+
             x = Math.min(x, this.raphaelPaper.width);
             y = Math.min(y, this.raphaelPaper.height);
 
-            this.resize(this.rectangle.topLeftPoint.x, this.rectangle.topLeftPoint.y, x - this.rectangle.topLeftPoint.x, y - this.rectangle.topLeftPoint.y);
+            this.resize(topLeftPoint.x, topLeftPoint.y, x - topLeftPoint.x, y - topLeftPoint.y);
         },
         bottom: function(dx, dy, x, y) {
+            var topLeftPoint = this.rectangle.topLeftPoint,
+                height = this.rectangle.height;
+
             y = Math.min(y, this.raphaelPaper.height);
 
-            this.resize(this.rectangle.topLeftPoint.x, this.rectangle.topLeftPoint.y, this.rectangle.width, y - this.rectangle.topLeftPoint.y);
+            this.resize(topLeftPoint.x, topLeftPoint.y, height, y - topLeftPoint.y);
         },
         bottomLeft: function(dx, dy, x, y) {
-            x = Math.max(0, Math.min(x, this.rectangle.topLeftPoint.x + this.rectangle.width - EditableRectangle.MIN_WIDTH));
+            var topLeftPoint = this.rectangle.topLeftPoint,
+                height = this.rectangle.height;
+
+            x = Math.max(0, Math.min(x, topLeftPoint.x + height - EditableRectangle.MIN_WIDTH));
             y = Math.min(y, this.raphaelPaper.height);
 
-            this.resize(x, this.rectangle.topLeftPoint.y, this.rectangle.width - (x - this.rectangle.topLeftPoint.x), y - this.rectangle.topLeftPoint.y);
+            this.resize(x, topLeftPoint.y, height - (x - topLeftPoint.x), y - topLeftPoint.y);
         },
         left: function(dx, dy, x, y) {
-            x = Math.max(0, Math.min(x, this.rectangle.topLeftPoint.x + this.rectangle.width - EditableRectangle.MIN_WIDTH));
+            var topLeftPoint = this.rectangle.topLeftPoint,
+                height = this.rectangle.height;
 
-            this.resize(x, this.rectangle.topLeftPoint.y, this.rectangle.width - (x - this.rectangle.topLeftPoint.x), this.rectangle.height);
+            x = Math.max(0, Math.min(x, topLeftPoint.x + height - EditableRectangle.MIN_WIDTH));
+
+            this.resize(x, topLeftPoint.y, height - (x - topLeftPoint.x), height);
         }
     };
 
@@ -119,13 +158,13 @@ define(['eve', 'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/r
         this.rectangle.addOnRaphaelPaper(this.raphaelPaper);
 
         var self = this;
-        for (var i = 0; i < this.resizeHandlersConfig.length; i++) {
-            var handleElement = this.resizeHandlersConfig[i][0],
-            resizeDispatcher = this.resizeHandlersConfig[i][1];
+        for (var i = 0; i < this.resizeHandles.length; i++) {
+            var handleElement = this.resizeHandles[i],
+            resizeDispatcher = this.resizeDispatchersMap[i];
 
             handleElement.addOnRaphaelPaper(this.raphaelPaper);
 
-            eve.on(['handler', 'dragProcess', handleElement.id].join('.'), (function() {
+            eve.on(['handle', 'dragProcess', handleElement.id].join('.'), (function() {
                 var dispatcherClosure = resizeDispatcher;
 
                 return function() {
@@ -133,7 +172,7 @@ define(['eve', 'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/r
                 }
             })());
 
-            eve.on(['handler', 'dragEnd', handleElement.id].join('.'), function() {
+            eve.on(['handle', 'dragEnd', handleElement.id].join('.'), function() {
                 eve(['editableShape', 'resizeEnd', self.id].join('.'), self, arguments);
             });
         }
@@ -142,23 +181,13 @@ define(['eve', 'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/r
             self.updateKeyPoints();
         });
 
-        eve.on(['shape', 'click', this.id].join('.'), function() {
+        eve.on(['shape', 'click', this.rectangle.id].join('.'), function() {
             eve(['editableShape', 'click', self.id].join('.'), self, arguments);
         });
 
-        eve.on(['shape', 'dragEnd', this.id].join('.'), function() {
+        eve.on(['shape', 'dragEnd', this.rectangle.id].join('.'), function() {
             eve(['editableShape', 'dragEnd', self.id].join('.'), self, arguments);
         });
-    };
-
-    EditableRectangle.prototype.removeFromPaper = function() {
-        EditableShape.prototype.removeFromPaper.apply(this, arguments);
-
-        for (var i = 0; i < this.resizeHandlersConfig.length; i++) {
-            this.resizeHandlersConfig[i][0].removeFromPaper();
-        }
-
-        eve.off(['editableShape', 'click', this.id].join('.'));
     };
 
     EditableRectangle.prototype.getData = function() {

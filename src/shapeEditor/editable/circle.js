@@ -16,7 +16,7 @@ define(['eve',  'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/
             bottom: new Point()
         };
 
-        this.resizeHandlers = [
+        var resizeHandles = [
             new Handle(this.keyPoints.left, 'x'),
             new Handle(this.keyPoints.top, 'y'),
             new Handle(this.keyPoints.right, 'x'),
@@ -25,7 +25,7 @@ define(['eve',  'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/
 
         this.updateKeyPoints();
 
-        EditableShape.apply(this, arguments);
+        EditableShape.call(this, resizeHandles);
     }
 
     EditableCircle.prototype = new EditableShape();
@@ -61,14 +61,16 @@ define(['eve',  'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/
         this.circle.addOnRaphaelPaper(this.raphaelPaper);
 
         var self = this;
-        for (var i = 0; i < this.resizeHandlers.length; i++) {
-            this.resizeHandlers[i].addOnRaphaelPaper(this.raphaelPaper);
+        for (var i = 0; i < this.resizeHandles.length; i++) {
+            var resizeHandle = this.resizeHandles[i];
 
-            eve.on(['handler', 'dragProcess', this.resizeHandlers[i].id].join('.'), function() {
+            resizeHandle.addOnRaphaelPaper(this.raphaelPaper);
+
+            eve.on(['handle', 'dragProcess', resizeHandle.id].join('.'), function() {
                 resizeDispatcher.apply(self, arguments);
             });
 
-            eve.on(['handler', 'dragEnd', this.resizeHandlers[i].id].join('.'), function() {
+            eve.on(['handle', 'dragEnd', resizeHandle.id].join('.'), function() {
                 eve(['editableShape', 'resizeEnd', self.id].join('.'), self, arguments);
             });
         }
@@ -85,16 +87,6 @@ define(['eve',  'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/
         eve.on(['shape', 'dragEnd', this.circle.id].join('.'), function() {
             eve(['editableShape', 'dragEnd', self.id].join('.'), self, arguments);
         });
-    };
-
-    EditableCircle.prototype.removeFromPaper = function() {
-        EditableShape.prototype.removeFromPaper.apply(this, arguments);
-
-        for (var i = 0; i < this.resizeHandlers.length; i++) {
-            this.resizeHandlers[i].removeFromPaper();
-        }
-
-        eve.off(['editableShape', 'click', this.id].join('.'));
     };
 
     EditableCircle.prototype.getData = function() {
