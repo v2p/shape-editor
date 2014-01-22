@@ -89,6 +89,12 @@ define(['eve',  'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/
         });
     };
 
+    EditableCircle.prototype.removeFromPaper = function() {
+        EditableShape.prototype.removeFromPaper.apply(this, arguments);
+
+        this.circle.removeFromPaper();
+    };
+
     EditableCircle.prototype.getData = function() {
         return this.circle.getData();
     };

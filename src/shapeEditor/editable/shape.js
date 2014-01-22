@@ -38,14 +38,12 @@ define(['eve'], function (eve) {
 
     EditableShape.prototype.hideResizeHandles = function() {
         for(var i = 0; i < this.resizeHandles.length; i++) {
-            console.log(this.resizeHandles[i]);
             this.resizeHandles[i].hide();
         }
     };
 
     EditableShape.prototype.showResizeHandles = function() {
         for(var i = 0; i < this.resizeHandles.length; i++) {
-            console.log(this.resizeHandles[i]);
             this.resizeHandles[i].show();
         }
     };

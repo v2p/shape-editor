@@ -2,26 +2,28 @@ require(['../lib/raphael', 'shapeEditor/main'], function (Raphael, ShapeEditor) 
 
     var shapeEditor = new ShapeEditor(Raphael('paper-container'), {
         onShapeClick: function(shape) {
-            if (shape._selected) {
-                shape._selected = false;
-                shape.showResizeHandles();
-            } else {
-                shape._selected = true;
-                shape.hideResizeHandles();
-            }
+            console.log('Click: ');
+            console.log(shape);
         },
 
-        onShapeCreate: function(shape) {},
+        onShapeCreate: function(shape) {
+            console.log('Create: ');
+            console.log(shape);
+        },
 
         onShapeDrag: function(shape) {
-            console.log(shape.getData());
+            console.log('Drag: ');
+            console.log(shape);
         },
 
         onShapeResize: function(shape) {
-            console.log(shape.getData());
+            console.log('Resize: ');
+            console.log(shape);
         }
     });
 
     shapeEditor.createRectangle(5, 5, 20, 20);
+    shapeEditor.createRectangle(25, 25, 20, 20);
     shapeEditor.createCircle(12, 12, 10);
+    shapeEditor.createCircle(72, 12, 10);
 });

@@ -119,28 +119,29 @@ define(['eve', 'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/r
         },
         bottom: function(dx, dy, x, y) {
             var topLeftPoint = this.rectangle.topLeftPoint,
-                height = this.rectangle.height;
+                width = this.rectangle.width;
 
             y = Math.min(y, this.raphaelPaper.height);
 
-            this.resize(topLeftPoint.x, topLeftPoint.y, height, y - topLeftPoint.y);
+            this.resize(topLeftPoint.x, topLeftPoint.y, width, y - topLeftPoint.y);
         },
         bottomLeft: function(dx, dy, x, y) {
             var topLeftPoint = this.rectangle.topLeftPoint,
-                height = this.rectangle.height;
+                width = this.rectangle.width;
 
-            x = Math.max(0, Math.min(x, topLeftPoint.x + height - EditableRectangle.MIN_WIDTH));
+            x = Math.max(0, Math.min(x, topLeftPoint.x + width - EditableRectangle.MIN_WIDTH));
             y = Math.min(y, this.raphaelPaper.height);
 
-            this.resize(x, topLeftPoint.y, height - (x - topLeftPoint.x), y - topLeftPoint.y);
+            this.resize(x, topLeftPoint.y, width - (x - topLeftPoint.x), y - topLeftPoint.y);
         },
         left: function(dx, dy, x, y) {
             var topLeftPoint = this.rectangle.topLeftPoint,
+                width = this.rectangle.width,
                 height = this.rectangle.height;
 
-            x = Math.max(0, Math.min(x, topLeftPoint.x + height - EditableRectangle.MIN_WIDTH));
+            x = Math.max(0, Math.min(x, topLeftPoint.x + width - EditableRectangle.MIN_WIDTH));
 
-            this.resize(x, topLeftPoint.y, height - (x - topLeftPoint.x), height);
+            this.resize(x, topLeftPoint.y, width - (x - topLeftPoint.x), height);
         }
     };
 
@@ -188,6 +189,12 @@ define(['eve', 'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/r
         eve.on(['shape', 'dragEnd', this.rectangle.id].join('.'), function() {
             eve(['editableShape', 'dragEnd', self.id].join('.'), self, arguments);
         });
+    };
+
+    EditableRectangle.prototype.removeFromPaper = function() {
+        EditableShape.prototype.removeFromPaper.apply(this, arguments);
+
+        this.rectangle.removeFromPaper();
     };
 
     EditableRectangle.prototype.getData = function() {

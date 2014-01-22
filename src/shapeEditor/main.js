@@ -5,7 +5,31 @@ define(['eve', 'shapeEditor/editable/circle', 'shapeEditor/editable/rectangle'],
 
         this.eventHandlers.onShapeCreate && this.eventHandlers.onShapeCreate.call(this, shapeObject);
 
+        bindEventHandlers.call(this, shapeObject);
+
         return shapeObject;
+    };
+
+    var bindEventHandlers = function(shapeObject) {
+        var self = this;
+
+        eve.on(['editableShape', 'click', shapeObject.id].join('.'), function() {
+            var shapeObject = this;
+
+            self.eventHandlers.onShapeClick && self.eventHandlers.onShapeClick.call(self, shapeObject);
+        });
+
+        eve.on(['editableShape', 'dragEnd', shapeObject.id].join('.'), function() {
+            var shapeObject = this;
+
+            self.eventHandlers.onShapeDrag && self.eventHandlers.onShapeDrag.call(self, shapeObject);
+        });
+
+        eve.on(['editableShape', 'resizeEnd', shapeObject.id].join('.'), function() {
+            var shapeObject = this;
+
+            self.eventHandlers.onShapeResize && self.eventHandlers.onShapeResize.call(self, shapeObject);
+        });
     };
 
     return function(raphaelPaper, eventHandlers) {
@@ -25,24 +49,6 @@ define(['eve', 'shapeEditor/editable/circle', 'shapeEditor/editable/rectangle'],
         self.removeShape = function(shapeObject) {
             shapeObject.removeFromPaper();
         };
-
-        eve.on(['editableShape', 'click', '*'].join('.'), function() {
-            var shapeObject = this;
-
-            self.eventHandlers.onShapeClick && self.eventHandlers.onShapeClick.call(self, shapeObject);
-        });
-
-        eve.on(['editableShape', 'dragEnd', '*'].join('.'), function() {
-            var shapeObject = this;
-
-            self.eventHandlers.onShapeDrag && self.eventHandlers.onShapeDrag.call(self, shapeObject);
-        });
-
-        eve.on(['editableShape', 'resizeEnd', '*'].join('.'), function() {
-            var shapeObject = this;
-
-            self.eventHandlers.onShapeResize && self.eventHandlers.onShapeResize.call(self, shapeObject);
-        });
 
         return self;
     }
