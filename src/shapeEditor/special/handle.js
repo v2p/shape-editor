@@ -76,6 +76,10 @@ define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, 
             eve(['handle', 'dragEnd', this.id].join('.'), this, x, y, domEvent);
         });
 
+        eve.on(['shape', 'click', this.id].join('.'), function() {
+            eve(['handle', 'click', this.id].join('.'), self, arguments);
+        });
+
         eve.on(['point', 'setCoords', this.attachmentPoint.id].join('.'), function(x, y) {
             self.raphaelElement.attr({cx: x, cy: y});
         });

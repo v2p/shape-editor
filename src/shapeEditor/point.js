@@ -25,7 +25,7 @@ define(['eve'], function (eve) {
         this.x = x || 0;
         this.y = y || 0;
 
-        eve(['point', 'setCoords', this.id].join('.'), this, x, y);
+        eve(['point', 'setCoords', this.id].join('.'), this, this.x, this.y);
     };
 
     /**
@@ -33,8 +33,7 @@ define(['eve'], function (eve) {
      * @param {Number} [dy]
      */
     Point.prototype.move = function(dx, dy) {
-        this.x += dx || 0;
-        this.y += dy || 0;
+        this.setCoords(this.x + dx, this.y + dy);
 
         eve(['point', 'move', this.id].join('.'), this, dx, dy, this.x, this.y);
     };

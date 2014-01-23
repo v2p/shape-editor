@@ -19,6 +19,10 @@ require(['../lib/raphael', 'shapeEditor/main'], function (Raphael, ShapeEditor) 
         onShapeResize: function(shape) {
             console.log('Resize: ');
             console.log(shape);
+        },
+
+        onPolygonShapePointClick: function(polygonShape, point) {
+            this.removePointFromPolygon(polygonShape, point);
         }
     });
 
@@ -26,4 +30,10 @@ require(['../lib/raphael', 'shapeEditor/main'], function (Raphael, ShapeEditor) 
     shapeEditor.createRectangle(25, 25, 20, 20);
     shapeEditor.createCircle(12, 12, 10);
     shapeEditor.createCircle(72, 12, 10);
+
+    var polygon = shapeEditor.createPolygon([{x: 40, y: 40}, {x: 70, y: 70}, {x: 40, y: 70}]);
+
+    shapeEditor.addPointToPolygon(polygon, 1, 1);
+    shapeEditor.addPointToPolygon(polygon, 30, 10);
+    shapeEditor.addPointToPolygon(polygon, 20, 80);
 });

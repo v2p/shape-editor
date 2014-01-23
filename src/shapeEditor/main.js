@@ -1,4 +1,4 @@
-define(['eve', 'shapeEditor/editable/circle', 'shapeEditor/editable/rectangle'], function (eve, EditableCircle, EditableRectangle) {
+define(['eve', 'shapeEditor/editable/circle', 'shapeEditor/editable/rectangle', 'shapeEditor/editable/polygon'], function (eve, EditableCircle, EditableRectangle, EditablePolygon) {
 
     var createShape = function(shapeObject) {
         shapeObject.addOnRaphaelPaper(this.raphaelPaper);
@@ -44,6 +44,33 @@ define(['eve', 'shapeEditor/editable/circle', 'shapeEditor/editable/rectangle'],
 
         self.createRectangle = function(x, y, width, height) {
             return createShape.call(self, new EditableRectangle(x, y, width, height));
+        };
+
+        self.createPolygon = function(points) {
+            var polygon = createShape.call(self, new EditablePolygon(points));
+
+            eve.on(['polygon', 'handleClick', polygon.id].join('.'), function(handle) {
+                self.eventHandlers.onPolygonShapePointClick && self.eventHandlers.onPolygonShapePointClick.call(self, polygon, handle.attachmentPoint);
+            });
+
+            return polygon;
+        };
+
+        /**
+         * @param {EditablePolygon} polygonShapeObj
+         * @param x
+         * @param y
+         */
+        self.addPointToPolygon = function(polygonShapeObj, x, y) {
+            polygonShapeObj.insertPoint(x, y);
+        };
+
+        /**
+         * @param {EditablePolygon} polygonShapeObj
+         * @param {Point} point
+         */
+        self.removePointFromPolygon = function(polygonShapeObj, point) {
+            polygonShapeObj.removePoint(point.id);
         };
 
         self.removeShape = function(shapeObject) {

@@ -13,26 +13,119 @@ define(['eve',  'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/
     EditablePolygon.prototype = new EditableShape();
     EditablePolygon.prototype.constructor = EditablePolygon;
 
-    EditablePolygon.prototype.updateKeyPoints = function() {
-        EditableShape.prototype.updateKeyPoints.apply(this, arguments);
+    EditablePolygon.prototype.resize = function(pointId, x, y) {
+        this.polygon.resize(pointId, x, y);
     };
 
-    EditablePolygon.prototype.resize = function() {
-        this.updateKeyPoints();
+    EditablePolygon.prototype.addPoint = function(x, y) {
+        this.polygon.pushPoint(x, y);
+    };
+
+    var findNearestPoint = function(x, y) {
+        var points = this.polygon.points || [],
+            pointsCount = points.length,
+            pointsDistanceMap = {},
+            pointPairs = [];
+
+        // calculate the distance from every point to the specified point (x,y):
+        for(var i = 0; i < pointsCount; i++) {
+            var point = points[i];
+            pointsDistanceMap[point.id] = Point.calculateDistance(point.x, point.y, x, y);
+        }
+
+        // combine points into pairs:
+        for(var j = 1; j < pointsCount; j++) {
+            pointPairs.push([ points[j-1], points[j] ]);
+        }
+        // ... and don't forget to add pair from lastPoint and firstPoint:
+        pointPairs.push([ points[pointsCount - 1], points[0] ]);
+
+        var nearestPointPairIndex = 0,
+            minDistance = 0;
+
+        for(var k = 0; k < pointPairs.length; k++) {
+            var point1 = pointPairs[k][0],
+                point2 = pointPairs[k][1],
+                distance = pointsDistanceMap[point1.id] + pointsDistanceMap[point2.id];
+
+            if (distance <= minDistance) {
+                minDistance = distance;
+                nearestPointPairIndex = k;
+            }
+        }
+
+        return pointPairs[nearestPointPairIndex][0].id;
+    };
+
+    EditablePolygon.prototype.insertPoint = function(x, y) {
+        var pointId = findNearestPoint.call(this, x, y);
+        this.polygon.insertPointAfter(pointId, x, y);
+    };
+
+    EditablePolygon.prototype.removePoint = function(pointId) {
+
+        this.polygon.removePoint(pointId);
+
+        for(var i = 0; i < this.resizeHandles.length; i++) {
+            var handle = this.resizeHandles[i];
+
+            if (handle.attachmentPoint.id == pointId) {
+                handle.removeFromPaper();
+            }
+        }
     };
 
     EditablePolygon.prototype.init = function() {
         EditableShape.prototype.init.apply(this, arguments);
 
+        var self = this;
 
+        this.polygon.addOnRaphaelPaper(this.raphaelPaper);
+
+        var addPointEventCallback = function(point) {
+            var handle = new Handle(point);
+            handle.addOnRaphaelPaper(self.raphaelPaper);
+
+            eve.on(['handle', 'dragProcess', handle.id].join('.'), function(dx, dy, x, y, domEvent) {
+                self.resize(point.id, x, y);
+            });
+
+            eve.on(['handle', 'dragEnd', handle.id].join('.'), function() {
+                eve(['editableShape', 'resizeEnd', self.id].join('.'), self, arguments);
+            });
+
+            eve.on(['handle', 'click', handle.id].join('.'), function() {
+                eve(['polygon', 'handleClick', self.id].join('.'), self, handle);
+            });
+
+            self.resizeHandles.push(handle);
+        };
+
+        for(var i = 0; i < this.polygon.points.length; i++) {
+            addPointEventCallback(this.polygon.points[i]);
+        }
+
+        eve.on(['polygon', 'addPoint', this.polygon.id].join('.'), function(point) {
+            addPointEventCallback(point);
+        });
+
+        eve.on(['shape', 'click', this.polygon.id].join('.'), function() {
+            eve(['editableShape', 'click', self.id].join('.'), self, arguments);
+        });
+
+        eve.on(['shape', 'dragEnd', this.polygon.id].join('.'), function() {
+            eve(['editableShape', 'dragEnd', self.id].join('.'), self, arguments);
+        });
     };
 
-    EditableRectangle.prototype.removeFromPaper = function() {
+    EditablePolygon.prototype.removeFromPaper = function() {
         EditableShape.prototype.removeFromPaper.apply(this, arguments);
+
+        this.polygon.removeFromPaper();
     };
 
-    EditableRectangle.prototype.getData = function() {
-
+    EditablePolygon.prototype.getData = function() {
+        return this.polygon.getData();
     };
 
     return EditablePolygon;
