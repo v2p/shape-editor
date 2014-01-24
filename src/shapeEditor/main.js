@@ -57,20 +57,24 @@ define(['eve', 'shapeEditor/editable/circle', 'shapeEditor/editable/rectangle', 
         };
 
         /**
-         * @param {EditablePolygon} polygonShapeObj
+         * @param {EditablePolygon} shapeObj
          * @param x
          * @param y
          */
-        self.addPointToPolygon = function(polygonShapeObj, x, y) {
-            polygonShapeObj.insertPoint(x, y);
+        self.addPointToShape = function(shapeObj, x, y) {
+            shapeObj.insertPoint(x, y);
         };
 
         /**
-         * @param {EditablePolygon} polygonShapeObj
+         * @param {EditablePolygon} shapeObj
          * @param {Point} point
          */
-        self.removePointFromPolygon = function(polygonShapeObj, point) {
-            polygonShapeObj.removePoint(point.id);
+        self.removePointFromShape = function(shapeObj, point) {
+            shapeObj.removePoint(point.id);
+        };
+
+        self.canModifyShapePoints = function(shapeObj) {
+            return shapeObj instanceof EditablePolygon;
         };
 
         self.removeShape = function(shapeObject) {
