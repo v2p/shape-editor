@@ -83,5 +83,9 @@ define(['eve'], function (eve) {
         return this.raphaelElement.getPath();
     };
 
+    Shape.prototype.getBBox = function() {
+        return this.raphaelElement.getBBox();
+    };
+
     return Shape;
 });

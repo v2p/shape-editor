@@ -103,5 +103,9 @@ define(['eve',  'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/
         return this.circle.getPath();
     };
 
+    EditableCircle.prototype.getBBox = function() {
+        return this.circle.getBBox();
+    };
+
     return EditableCircle;
 });

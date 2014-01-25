@@ -124,8 +124,12 @@ define(['raphael', 'eve', 'shapeEditor/editable/circle', 'shapeEditor/editable/r
                     var shape1 = this.shapesCollection[id1],
                         shape2 = this.shapesCollection[id2];
 
-                    var n = Raphael.pathIntersectionNumber(shape1.getPath(), shape2.getPath());
+                    // some kind of optimization - we don't need to compare paths if even bboxes aren't intersected:
+                    if (!Raphael.isBBoxIntersect(shape1.getBBox(), shape2.getBBox())) {
+                        continue;
+                    }
 
+                    var n = Raphael.pathIntersectionNumber(shape1.getPath(), shape2.getPath());
                     if (n > 0) {
                         shapeIntersections[shape1.id] = true;
                         shapeIntersections[shape2.id] = true;

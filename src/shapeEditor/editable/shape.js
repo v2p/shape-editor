@@ -37,6 +37,7 @@ define(['eve'], function (eve) {
     EditableShape.prototype.getData = function() {};
 
     EditableShape.prototype.getPath = function() {};
+    EditableShape.prototype.getBBox = function() {};
 
     EditableShape.prototype.hideResizeHandles = function() {
         for(var i = 0; i < this.resizeHandles.length; i++) {

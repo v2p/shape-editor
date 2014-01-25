@@ -205,5 +205,9 @@ define(['eve', 'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/r
         return this.rectangle.getPath();
     };
 
+    EditableRectangle.prototype.getBBox = function() {
+        return this.rectangle.getBBox();
+    };
+
     return EditableRectangle;
 });
