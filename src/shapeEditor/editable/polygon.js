@@ -128,5 +128,9 @@ define(['eve',  'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/
         return this.polygon.getData();
     };
 
+    EditablePolygon.prototype.getPath = function() {
+        return this.polygon.getPath();
+    };
+
     return EditablePolygon;
 });

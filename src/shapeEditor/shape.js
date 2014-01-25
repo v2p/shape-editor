@@ -79,5 +79,9 @@ define(['eve'], function (eve) {
         return {};
     };
 
+    Shape.prototype.getPath = function() {
+        return this.raphaelElement.getPath();
+    };
+
     return Shape;
 });

@@ -99,5 +99,9 @@ define(['eve',  'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/
         return this.circle.getData();
     };
 
+    EditableCircle.prototype.getPath = function() {
+        return this.circle.getPath();
+    };
+
     return EditableCircle;
 });
