@@ -12,13 +12,21 @@ define(['eve'], function (eve) {
     Shape._id = 0;
     Shape.STROKE_WIDTH = 2;
 
-    Shape.prototype.getRaphaelElementAttributes = function() {
+    Shape.prototype.getDefaultStyle = function() {
         return {
             fill: '#fff',
             'fill-opacity': 0.5,
             'stroke-width': Shape.STROKE_WIDTH,
             stroke: '#000'
         };
+    };
+
+    Shape.prototype.setStyle = function(config) {
+        this.raphaelElement.attr(config);
+    };
+
+    Shape.prototype.resetStyle = function() {
+        this.setStyle(this.getDefaultStyle());
     };
 
     Shape.prototype.addOnRaphaelPaper = function(raphaelPaper) {
@@ -33,7 +41,7 @@ define(['eve'], function (eve) {
     Shape.prototype.initRaphaelElement = function() {
         var self = this;
 
-        this.raphaelElement.attr(this.getRaphaelElementAttributes());
+        this.resetStyle();
 
         /**
          * Make element draggable, @see http://raphaeljs.com/reference.html#Element.drag

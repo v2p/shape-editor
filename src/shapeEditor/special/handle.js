@@ -25,8 +25,8 @@ define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, 
         return this.raphaelPaper.circle(this.attachmentPoint.x, this.attachmentPoint.y, this.radius);
     };
 
-    Handle.prototype.getRaphaelElementAttributes = function() {
-        var parentAttributes = Shape.prototype.getRaphaelElementAttributes.apply(this, arguments);
+    Handle.prototype.getDefaultStyle = function() {
+        var parentAttributes = Shape.prototype.getDefaultStyle.apply(this, arguments);
 
         delete parentAttributes['fill-opacity'];
 

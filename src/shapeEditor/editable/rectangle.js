@@ -166,16 +166,24 @@ define(['eve', 'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/r
             handleElement.addOnRaphaelPaper(this.raphaelPaper);
 
             eve.on(['handle', 'dragProcess', handleElement.id].join('.'), (function() {
-                var dispatcherClosure = resizeDispatcher;
+                var dispatcherInClosure = resizeDispatcher;
 
                 return function() {
-                    dispatcherClosure.apply(self, arguments);
+                    dispatcherInClosure.apply(self, arguments);
                 }
             })());
 
             eve.on(['handle', 'dragEnd', handleElement.id].join('.'), function() {
                 eve(['editableShape', 'resizeEnd', self.id].join('.'), self, arguments);
             });
+
+            eve.on(['handle', 'click', handleElement.id].join('.'), (function() {
+                var handleElementInClosure = handleElement;
+
+                return function() {
+                    eve(['editableShape', 'handleClick', self.id].join('.'), self, handleElementInClosure);
+                }
+            })());
         }
 
         eve.on(['point', 'setCoords', this.rectangle.topLeftPoint.id].join('.'), function() {
@@ -207,6 +215,19 @@ define(['eve', 'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/r
 
     EditableRectangle.prototype.getBBox = function() {
         return this.rectangle.getBBox();
+    };
+
+    EditableRectangle.prototype.setStyle = function(styleConfig) {
+        EditableShape.prototype.setStyle.apply(this, arguments);
+
+        var shapeStyle = styleConfig.shape || {};
+        this.rectangle.setStyle(shapeStyle);
+    };
+
+    EditableRectangle.prototype.resetStyle = function() {
+        EditableShape.prototype.resetStyle.apply(this, arguments);
+
+        this.rectangle.resetStyle();
     };
 
     return EditableRectangle;

@@ -24,8 +24,13 @@ require(['raphael', 'shapeEditor/main'], function (Raphael, ShapeEditor) {
             showShapeIntersections.apply(this);
         },
 
-        onPolygonShapePointClick: function(polygonShape, point) {
-            //this.removePointFromShape(polygonShape, point);
+        onShapeHandleClick: function(shape, handle) {
+            if (!handle.__selected) {
+                handle.setStyle({fill: 'red'});
+                handle.__selected = true;
+            } else {
+                this.removePointFromShape(shape, handle.attachmentPoint);
+            }
         }
     });
 

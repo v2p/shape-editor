@@ -95,7 +95,7 @@ define(['eve',  'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/
             });
 
             eve.on(['handle', 'click', handle.id].join('.'), function() {
-                eve(['polygon', 'handleClick', self.id].join('.'), self, handle);
+                eve(['editableShape', 'handleClick', self.id].join('.'), self, handle);
             });
 
             self.resizeHandles.push(handle);
@@ -134,6 +134,19 @@ define(['eve',  'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/
 
     EditablePolygon.prototype.getBBox = function() {
         return this.polygon.getBBox();
+    };
+
+    EditablePolygon.prototype.setStyle = function(styleConfig) {
+        EditableShape.prototype.setStyle.apply(this, arguments);
+
+        var shapeStyle = styleConfig.shape || {};
+        this.polygon.setStyle(shapeStyle);
+    };
+
+    EditablePolygon.prototype.resetStyle = function() {
+        EditableShape.prototype.resetStyle.apply(this, arguments);
+
+        this.polygon.resetStyle();
     };
 
     return EditablePolygon;

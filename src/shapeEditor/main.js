@@ -35,6 +35,10 @@ define(['raphael', 'eve', 'shapeEditor/editable/circle', 'shapeEditor/editable/r
 
             self.eventHandlers.onShapeResize && self.eventHandlers.onShapeResize.call(self, shapeObject);
         });
+
+        eve.on(['editableShape', 'handleClick', shapeObject.id].join('.'), function(handle) {
+            self.eventHandlers.onShapeHandleClick && self.eventHandlers.onShapeHandleClick.call(self, shapeObject, handle);
+        });
     };
 
     return function(raphaelPaper, eventHandlers) {
@@ -57,13 +61,7 @@ define(['raphael', 'eve', 'shapeEditor/editable/circle', 'shapeEditor/editable/r
         };
 
         self.createPolygon = function(points) {
-            var polygon = createShape.call(self, new EditablePolygon(points));
-
-            eve.on(['polygon', 'handleClick', polygon.id].join('.'), function(handle) {
-                self.eventHandlers.onPolygonShapePointClick && self.eventHandlers.onPolygonShapePointClick.call(self, polygon, handle.attachmentPoint);
-            });
-
-            return polygon;
+            return createShape.call(self, new EditablePolygon(points));
         };
 
         /**

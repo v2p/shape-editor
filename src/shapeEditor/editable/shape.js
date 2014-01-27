@@ -39,6 +39,20 @@ define(['eve'], function (eve) {
     EditableShape.prototype.getPath = function() {};
     EditableShape.prototype.getBBox = function() {};
 
+    EditableShape.prototype.setStyle = function(styleConfig) {
+        var handleStyle = styleConfig.handle || null;
+
+        for(var i = 0; i < this.resizeHandles.length; i++) {
+            this.resizeHandles[i].setStyle(handleStyle);
+        }
+    };
+
+    EditableShape.prototype.resetStyle = function() {
+        for(var i = 0; i < this.resizeHandles.length; i++) {
+            this.resizeHandles[i].resetStyle();
+        }
+    };
+
     EditableShape.prototype.hideResizeHandles = function() {
         for(var i = 0; i < this.resizeHandles.length; i++) {
             this.resizeHandles[i].hide();

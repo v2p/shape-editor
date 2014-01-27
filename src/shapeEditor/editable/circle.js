@@ -73,6 +73,14 @@ define(['eve',  'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/
             eve.on(['handle', 'dragEnd', resizeHandle.id].join('.'), function() {
                 eve(['editableShape', 'resizeEnd', self.id].join('.'), self, arguments);
             });
+
+            eve.on(['handle', 'click', resizeHandle.id].join('.'), (function() {
+                var resizeHandleInClosure = resizeHandle;
+
+                return function() {
+                    eve(['editableShape', 'handleClick', self.id].join('.'), self, resizeHandleInClosure);
+                }
+            })());
         }
 
         // work with centerPoint's event faster than with circle's event:
@@ -105,6 +113,19 @@ define(['eve',  'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/
 
     EditableCircle.prototype.getBBox = function() {
         return this.circle.getBBox();
+    };
+
+    EditableCircle.prototype.setStyle = function(styleConfig) {
+        EditableShape.prototype.setStyle.apply(this, arguments);
+
+        var shapeStyle = styleConfig.shape || {};
+        this.circle.setStyle(shapeStyle);
+    };
+
+    EditableCircle.prototype.resetStyle = function() {
+        EditableShape.prototype.resetStyle.apply(this, arguments);
+
+        this.circle.resetStyle();
     };
 
     return EditableCircle;
