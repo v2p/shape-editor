@@ -132,5 +132,9 @@ define(['eve',  'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/
         return this.polygon.getPath();
     };
 
+    EditablePolygon.prototype.getBBox = function() {
+        return this.polygon.getBBox();
+    };
+
     return EditablePolygon;
 });

@@ -124,16 +124,32 @@ define(['raphael', 'eve', 'shapeEditor/editable/circle', 'shapeEditor/editable/r
                     var shape1 = this.shapesCollection[id1],
                         shape2 = this.shapesCollection[id2];
 
-                    // some kind of optimization - we don't need to compare paths if even bboxes aren't intersected:
-                    if (!Raphael.isBBoxIntersect(shape1.getBBox(), shape2.getBBox())) {
+                    var shape1BBox = shape1.getBBox(),
+                        shape2BBox = shape2.getBBox();
+
+                    // some kind of optimization: if bbox-es aren't intersected, it means that shapes aren't intersected too
+                    if (!Raphael.isBBoxIntersect(shape1BBox, shape2BBox)) {
                         continue;
                     }
 
-                    var n = Raphael.pathIntersectionNumber(shape1.getPath(), shape2.getPath());
+                    // ... if bbox-es can't provide clean answer, we compare paths:
+                    var shape1Path = shape1.getPath(),
+                        shape2Path = shape2.getPath();
+
+                    var n = Raphael.pathIntersectionNumber(shape1Path, shape2Path);
                     if (n > 0) {
                         shapeIntersections[shape1.id] = true;
                         shapeIntersections[shape2.id] = true;
+
+                    } else { // otherwise check some special cases - when one shape is placed inside other:
+                        if (Raphael.isPointInsidePath(shape2Path, shape1BBox.x, shape1BBox.y) ||
+                            Raphael.isPointInsidePath(shape1Path, shape2BBox.x, shape2BBox.y))
+                        {
+                            shapeIntersections[shape1.id] = true;
+                            shapeIntersections[shape2.id] = true;
+                        }
                     }
+
                 }
             }
 
