@@ -39,6 +39,14 @@ define(['raphael', 'eve', 'shapeEditor/editable/circle', 'shapeEditor/editable/r
         eve.on(['editableShape', 'handleClick', shapeObject.id].join('.'), function(handle) {
             self.eventHandlers.onShapeHandleClick && self.eventHandlers.onShapeHandleClick.call(self, shapeObject, handle);
         });
+
+        eve.on(['editableShape', 'addPoint', shapeObject.id].join('.'), function(point) {
+            self.eventHandlers.onShapeAddPoint && self.eventHandlers.onShapeAddPoint.call(self, shapeObject, point);
+        });
+
+        eve.on(['editableShape', 'removePoint', shapeObject.id].join('.'), function() {
+            self.eventHandlers.onShapeRemovePoint && self.eventHandlers.onShapeRemovePoint.call(self, shapeObject);
+        });
     };
 
     return function(raphaelPaper, eventHandlers) {

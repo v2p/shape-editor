@@ -82,7 +82,7 @@ define(['eve',  'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/
 
         this.polygon.addOnRaphaelPaper(this.raphaelPaper);
 
-        var addPointEventCallback = function(point) {
+        var onAddPointEventCallback = function(point) {
             var handle = new Handle(point);
             handle.addOnRaphaelPaper(self.raphaelPaper);
 
@@ -102,11 +102,17 @@ define(['eve',  'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/
         };
 
         for(var i = 0; i < this.polygon.points.length; i++) {
-            addPointEventCallback(this.polygon.points[i]);
+            onAddPointEventCallback(this.polygon.points[i]);
         }
 
         eve.on(['polygon', 'addPoint', this.polygon.id].join('.'), function(point) {
-            addPointEventCallback(point);
+            onAddPointEventCallback(point);
+
+            eve(['editableShape', 'addPoint', self.id].join('.'), self, point);
+        });
+
+        eve.on(['polygon', 'removePoint', this.polygon.id].join('.'), function() {
+            eve(['editableShape', 'removePoint', self.id].join('.'), self);
         });
 
         eve.on(['shape', 'click', this.polygon.id].join('.'), function() {

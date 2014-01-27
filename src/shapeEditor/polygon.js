@@ -35,6 +35,8 @@ define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, 
 
         this.points.splice(removeIndex, 1);
         this.redraw();
+
+        eve(['polygon', 'removePoint', this.id].join('.'), this);
     };
 
     Polygon.prototype.pushPoint = function(x, y) {

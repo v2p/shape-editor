@@ -31,6 +31,14 @@ require(['raphael', 'shapeEditor/main'], function (Raphael, ShapeEditor) {
             } else {
                 this.removePointFromShape(shape, handle.attachmentPoint);
             }
+        },
+
+        onShapeAddPoint: function(shape, point) {
+            console.log('point added');
+        },
+
+        onShapeRemovePoint: function(shape) {
+            console.log('point removed');
         }
     });
 
