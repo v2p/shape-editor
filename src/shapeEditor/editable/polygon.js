@@ -28,33 +28,45 @@ define(['eve',  'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/
             pointPairs = [];
 
         // calculate the distance from every point to the specified point (x,y):
-        for(var i = 0; i < pointsCount; i++) {
+        for (var i = 0; i < pointsCount; i++) {
             var point = points[i];
             pointsDistanceMap[point.id] = Point.calculateDistance(point.x, point.y, x, y);
         }
 
         // combine points into pairs:
-        for(var j = 1; j < pointsCount; j++) {
+        for (var j = 1; j < pointsCount; j++) {
             pointPairs.push([ points[j-1], points[j] ]);
         }
         // ... and don't forget to add pair from lastPoint and firstPoint:
         pointPairs.push([ points[pointsCount - 1], points[0] ]);
 
-        var nearestPointPairIndex = 0,
-            minDistance = 0;
-
-        for(var k = 0; k < pointPairs.length; k++) {
+        // now we analyze all point pairs and try to find nearest pair:
+        var nearestPointPairIndex, minDistance;
+        for (var k = 0; k < pointPairs.length; k++) {
             var point1 = pointPairs[k][0],
                 point2 = pointPairs[k][1],
                 distance = pointsDistanceMap[point1.id] + pointsDistanceMap[point2.id];
 
-            if (distance <= minDistance) {
+            if (k == 0) { // init nearestPair and minDistance:
+                nearestPointPairIndex = 0;
                 minDistance = distance;
+            }
+
+            if (distance < minDistance) {
                 nearestPointPairIndex = k;
+                minDistance = distance;
             }
         }
 
-        return pointPairs[nearestPointPairIndex][0].id;
+        // analyze nearest pair and choose the closest point:
+        var pointCandidate1 = pointPairs[nearestPointPairIndex][0],
+            pointCandidate2 = pointPairs[nearestPointPairIndex][1];
+
+        if (pointsDistanceMap[pointCandidate1.id] < pointsDistanceMap[pointCandidate2.id]) {
+            return pointCandidate1.id;
+        } else {
+            return pointCandidate2.id;
+        }
     };
 
     EditablePolygon.prototype.insertPoint = function(x, y) {

@@ -47,14 +47,21 @@ require(['raphael', 'shapeEditor/main'], function (Raphael, ShapeEditor) {
         //console.log(shapes.length);
     }
 
-    shapeEditor.createRectangle(5, 5, 20, 20);
+/*    shapeEditor.createRectangle(5, 5, 20, 20);
     shapeEditor.createRectangle(25, 25, 20, 20);
     shapeEditor.createCircle(12, 12, 10);
-    shapeEditor.createCircle(72, 12, 10);
+    shapeEditor.createCircle(72, 12, 10);*/
 
-    var polygon = shapeEditor.createPolygon([{x: 40, y: 40}, {x: 70, y: 70}, {x: 40, y: 70}]);
+    var polygon = shapeEditor.createPolygon([{x: 140, y: 140}, {x: 170, y: 170}, {x: 140, y: 170}]);
 
-    shapeEditor.addPointToShape(polygon, 1, 1);
+    /*shapeEditor.addPointToShape(polygon, 1, 1);
     shapeEditor.addPointToShape(polygon, 30, 10);
-    shapeEditor.addPointToShape(polygon, 20, 80);
+    shapeEditor.addPointToShape(polygon, 20, 80);*/
+
+    document.getElementById('paper-container').addEventListener('click', function(event) {
+        var x = event.clientX,
+            y = event.clientY;
+
+        shapeEditor.addPointToShape(polygon, x, y);
+    });
 });
