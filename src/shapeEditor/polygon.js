@@ -93,7 +93,7 @@ define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, 
         Shape.prototype.initRaphaelElement.apply(this, arguments);
 
         eve.on(['shape', 'dragStart', this.id].join('.'), function(x, y, domEvent) {
-            var polygonBoundingBox = this.raphaelElement.getBBox();
+            var polygonBoundingBox = this.getBBox();
 
             this._tempPointX = polygonBoundingBox.x;
             this._tempPointY = polygonBoundingBox.y;
@@ -155,7 +155,7 @@ define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, 
     Polygon.prototype.setCoords = function(x, y) {
         Shape.prototype.setCoords.apply(this, arguments);
 
-        var polygonBoundingBox = this.raphaelElement.getBBox();
+        var polygonBoundingBox = this.getBBox();
 
         var dx = x - polygonBoundingBox.x,
             dy = y - polygonBoundingBox.y;
@@ -186,6 +186,50 @@ define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, 
         }
 
         return result;
+    };
+
+    /**
+     * Fix for IE, where Raphael's bbox doesn't work as expected
+     */
+    Polygon.prototype.getBBox = function() {
+        var firstPoint = this.points[0],
+            minX = firstPoint.x,
+            minY = firstPoint.y,
+            maxX = firstPoint.x,
+            maxY = firstPoint.y;
+
+        for (var i = 1; i < this.points.length; i++) {
+            var point = this.points[i],
+                pointX = point.x,
+                pointY = point.y;
+
+            if (pointX < minX) {
+                minX = pointX;
+            }
+
+            if (pointY < minY) {
+                minY = pointY;
+            }
+
+            if (pointX > maxX) {
+                maxX = pointX;
+            }
+
+            if (pointY > maxY) {
+                maxY = pointY;
+            }
+        }
+
+        return {
+            x: minX,
+            y: minY,
+
+            x2: maxX,
+            y2: maxY,
+
+            width: maxX - minX,
+            height: maxY - minY
+        };
     };
 
     return Polygon;

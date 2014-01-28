@@ -29,7 +29,7 @@ require(['raphael', 'shapeEditor/main'], function (Raphael, ShapeEditor) {
                 handle.setStyle({fill: 'red'});
                 handle.__selected = true;
             } else {
-                this.removePointFromShape(shape, handle.attachmentPoint);
+                //this.removePointFromShape(shape, handle.attachmentPoint);
             }
         },
 
@@ -44,7 +44,7 @@ require(['raphael', 'shapeEditor/main'], function (Raphael, ShapeEditor) {
 
     function showShapeIntersections() {
         var shapes = this.findAllIntersectedShapes();
-        console.log(shapes.length);
+        //console.log(shapes.length);
     }
 
     shapeEditor.createRectangle(5, 5, 20, 20);
