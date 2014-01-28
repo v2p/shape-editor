@@ -43,7 +43,7 @@ require(['raphael', 'shapeEditor/main'], function (Raphael, ShapeEditor) {
     });
 
     function showShapeIntersections() {
-        var shapes = this.findIntersectedShapes();
+        var shapes = this.findAllIntersectedShapes();
         console.log(shapes.length);
     }
 

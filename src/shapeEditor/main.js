@@ -101,10 +101,67 @@ define(['raphael', 'eve', 'shapeEditor/editable/circle', 'shapeEditor/editable/r
             shapeObject.removeFromPaper();
         };
 
+        self.isShapesIntersected = function(shape1, shape2) {
+            var shape1BBox = shape1.getBBox(),
+                shape2BBox = shape2.getBBox();
+
+            // some kind of optimization: if bbox-es aren't intersected, it means that shapes aren't intersected too
+            if (!Raphael.isBBoxIntersect(shape1BBox, shape2BBox)) {
+                return false;
+            }
+
+            // ... if bbox-es can't provide clean answer, we compare paths:
+            var shape1Path = shape1.getPath(),
+                shape2Path = shape2.getPath();
+
+            var n = Raphael.pathIntersectionNumber(shape1Path, shape2Path);
+            if (n > 0) {
+                return true;
+
+            } else { // otherwise check some special cases - when one shape is placed inside other:
+                if ((Raphael.isPointInsidePath(shape2Path, shape1BBox.x, shape1BBox.y) &&
+                    Raphael.isPointInsidePath(shape2Path, shape1BBox.x2, shape1BBox.y2))
+                    ||
+                    (Raphael.isPointInsidePath(shape1Path, shape2BBox.x, shape2BBox.y) &&
+                    Raphael.isPointInsidePath(shape1Path, shape2BBox.x2, shape2BBox.y2)))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        };
+
+        /**
+         * @param {EditableShape} shapeObject
+         * @returns {EditableShape[]}
+         */
+        self.findIntersectionsWithShape = function(shapeObject) {
+            var result = [];
+
+            for (var shapeId in this.shapesCollection) {
+                if (!this.shapesCollection.hasOwnProperty(shapeId)) {
+                    continue;
+                }
+
+                if (shapeId == shapeObject.id) {
+                    continue;
+                }
+
+                var anotherShape = this.shapesCollection[shapeId];
+
+                if (self.isShapesIntersected(shapeObject, anotherShape)) {
+                    result.push(anotherShape);
+                }
+            }
+
+            return result;
+        };
+
         /**
          * @returns {EditableShape[]}
          */
-        self.findIntersectedShapes = function() {
+        self.findAllIntersectedShapes = function() {
             var shapeIntersections = {};
 
             for (var id1 in this.shapesCollection) {
@@ -130,32 +187,10 @@ define(['raphael', 'eve', 'shapeEditor/editable/circle', 'shapeEditor/editable/r
                     var shape1 = this.shapesCollection[id1],
                         shape2 = this.shapesCollection[id2];
 
-                    var shape1BBox = shape1.getBBox(),
-                        shape2BBox = shape2.getBBox();
-
-                    // some kind of optimization: if bbox-es aren't intersected, it means that shapes aren't intersected too
-                    if (!Raphael.isBBoxIntersect(shape1BBox, shape2BBox)) {
-                        continue;
-                    }
-
-                    // ... if bbox-es can't provide clean answer, we compare paths:
-                    var shape1Path = shape1.getPath(),
-                        shape2Path = shape2.getPath();
-
-                    var n = Raphael.pathIntersectionNumber(shape1Path, shape2Path);
-                    if (n > 0) {
+                    if (self.isShapesIntersected(shape1, shape2)) {
                         shapeIntersections[shape1.id] = true;
                         shapeIntersections[shape2.id] = true;
-
-                    } else { // otherwise check some special cases - when one shape is placed inside other:
-                        if (Raphael.isPointInsidePath(shape2Path, shape1BBox.x, shape1BBox.y) ||
-                            Raphael.isPointInsidePath(shape1Path, shape2BBox.x, shape2BBox.y))
-                        {
-                            shapeIntersections[shape1.id] = true;
-                            shapeIntersections[shape2.id] = true;
-                        }
                     }
-
                 }
             }
 
