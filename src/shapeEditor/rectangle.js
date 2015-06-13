@@ -1,4 +1,13 @@
-define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, Shape) {
+define([
+    'eve'
+    , 'shapeEditor/point'
+    , 'shapeEditor/shape'
+], function (
+    eve
+    , Point
+    , Shape
+) {
+    "use strict";
 
     /**
      * @param x
@@ -33,31 +42,34 @@ define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, 
         return this.raphaelPaper.rect(this.topLeftPoint.x, this.topLeftPoint.y, this.width, this.height);
     };
 
-    Rectangle.prototype.initRaphaelElement = function(raphaelElement) {
+    Rectangle.prototype.initRaphaelElement = function() {
         Shape.prototype.initRaphaelElement.apply(this, arguments);
 
-        eve.on(['shape', 'dragStart', this.id].join('.'), function(x, y, domEvent) {
-            this._tempPointX = this.topLeftPoint.x;
-            this._tempPointY = this.topLeftPoint.y;
+        eve.on(['shape', 'dragStart', this.id].join('.'), function(/*x, y, domEvent*/) {
+            var self = this;
+            self._tempPointX = self.topLeftPoint.x;
+            self._tempPointY = self.topLeftPoint.y;
         });
 
-        eve.on(['shape', 'dragProcess', this.id].join('.'), function(dx, dy, x, y, domEvent) {
+        eve.on(['shape', 'dragProcess', this.id].join('.'), function(dx, dy/*, x, y, domEvent*/) {
+            var self = this;
+
             var validX = Math.min(
-                Math.max(this._tempPointX + dx, 0),
+                Math.max(self._tempPointX + dx, 0),
                 this.raphaelPaper.width - this.width
             );
 
             var validY = Math.min(
-                Math.max(this._tempPointY + dy, 0),
+                Math.max(self._tempPointY + dy, 0),
                 this.raphaelPaper.height - this.height
             );
 
-            this.setCoords(validX, validY);
+            self.setCoords(validX, validY);
         });
 
-        eve.on(['shape', 'dragEnd', this.id].join('.'), function(x, y, domEvent) {
-            delete this._tempPointX;
-            delete this._tempPointY;
+        eve.on(['shape', 'dragEnd', this.id].join('.'), function(/*x, y, domEvent*/) {
+            delete self._tempPointX;
+            delete self._tempPointY;
         });
     };
 

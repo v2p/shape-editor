@@ -1,4 +1,17 @@
-define(['eve', 'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/rectangle', 'shapeEditor/special/handle'], function (eve, EditableShape, Point, Rectangle, Handle) {
+define([
+    'eve'
+    , 'shapeEditor/editable/shape'
+    , 'shapeEditor/point'
+    , 'shapeEditor/rectangle'
+    , 'shapeEditor/special/handle'
+], function (
+    eve
+    , EditableShape
+    , Point
+    , Rectangle
+    , Handle
+) {
+    "use strict";
 
     /**
      * @param x
@@ -101,7 +114,7 @@ define(['eve', 'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/r
 
             this.rectangle.resize(topLeftPoint.x, y, x - topLeftPoint.x, height - (y - topLeftPoint.y));
         },
-        right: function(dx, dy, x, y) {
+        right: function(dx, dy, x/*, y*/) {
             var topLeftPoint = this.rectangle.topLeftPoint,
                 height = this.rectangle.height;
 
@@ -134,7 +147,7 @@ define(['eve', 'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/r
 
             this.resize(x, topLeftPoint.y, width - (x - topLeftPoint.x), y - topLeftPoint.y);
         },
-        left: function(dx, dy, x, y) {
+        left: function(dx, dy, x/*, y*/) {
             var topLeftPoint = this.rectangle.topLeftPoint,
                 width = this.rectangle.width,
                 height = this.rectangle.height;

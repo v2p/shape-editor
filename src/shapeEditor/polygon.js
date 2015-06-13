@@ -1,4 +1,25 @@
-define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, Shape) {
+define([
+    'eve'
+    , 'shapeEditor/point'
+    , 'shapeEditor/shape'
+], function (
+    eve
+    , Point
+    , Shape
+) {
+    "use strict";
+
+    function findPointIndexByPointId(pointId, points) {
+        var index = 0;
+        for (var i = 0; i < points.length; i++) {
+            if (points[i].id === pointId) {
+                index = i;
+                break;
+            }
+        }
+
+        return index;
+    }
 
     /**
      * @param {Array} pointsData
@@ -46,17 +67,6 @@ define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, 
         eve(['polygon', 'addPoint', this.id].join('.'), this, point);
     };
 
-    var findPointIndexByPointId = function(pointId, points) {
-        var index = 0;
-        for(var i = 0; i < points.length; i++) {
-            if (points[i].id == pointId) {
-                index = i;
-                break;
-            }
-        }
-        return index;
-    };
-
     /**
      * @see http://raphaeljs.com/reference.html#Paper.path
      * @param {Point[]} points
@@ -77,7 +87,7 @@ define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, 
      */
     Polygon.prototype.getPointById = function(id) {
         for(var i = 0; i < this.points.length; i++) {
-            if (this.points[i].id == id) {
+            if (this.points[i].id === id) {
                 return this.points[i];
             }
         }
@@ -86,43 +96,48 @@ define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, 
     };
 
     Polygon.prototype.createRaphaelElement = function() {
-        return this.raphaelPaper.path(buildPathString(this.points));
+        return this.raphaelPaper.path( buildPathString(this.points) );
     };
 
     Polygon.prototype.initRaphaelElement = function() {
         Shape.prototype.initRaphaelElement.apply(this, arguments);
 
-        eve.on(['shape', 'dragStart', this.id].join('.'), function(x, y, domEvent) {
-            var polygonBoundingBox = this.getBBox();
+        eve.on(['shape', 'dragStart', this.id].join('.'), function(/*x, y, domEvent*/) {
+            var self = this;
+            var polygonBoundingBox = self.getBBox();
 
-            this._tempPointX = polygonBoundingBox.x;
-            this._tempPointY = polygonBoundingBox.y;
-            this._tempWidth = polygonBoundingBox.width;
-            this._tempHeight = polygonBoundingBox.height;
+            self._tempPointX = polygonBoundingBox.x;
+            self._tempPointY = polygonBoundingBox.y;
+            self._tempWidth = polygonBoundingBox.width;
+            self._tempHeight = polygonBoundingBox.height;
         });
 
-        eve.on(['shape', 'dragProcess', this.id].join('.'), function(dx, dy, x, y, domEvent) {
+        eve.on(['shape', 'dragProcess', this.id].join('.'), function(dx, dy/*, x, y, domEvent*/) {
+            var self = this;
 
             var validX = Math.min(
-                Math.max(0, this._tempPointX + dx), this.raphaelPaper.width - this._tempWidth
+                Math.max(0, self._tempPointX + dx), this.raphaelPaper.width - self._tempWidth
             );
 
             var validY = Math.min(
-                Math.max(0, this._tempPointY + dy), this.raphaelPaper.height - this._tempHeight
+                Math.max(0, self._tempPointY + dy), this.raphaelPaper.height - self._tempHeight
             );
 
-            this.setCoords(validX, validY);
+            self.setCoords(validX, validY);
         });
 
-        eve.on(['shape', 'dragEnd', this.id].join('.'), function(x, y, domEvent) {
-            delete this._tempPointX;
-            delete this._tempPointY;
-            delete this._tempWidth;
-            delete this._tempHeight;
+        eve.on(['shape', 'dragEnd', this.id].join('.'), function(/*x, y, domEvent*/) {
+            var self = this;
+
+            delete self._tempPointX;
+            delete self._tempPointY;
+            delete self._tempWidth;
+            delete self._tempHeight;
         });
 
         eve.on(['polygon', 'addPoint', this.id].join('.'), function() {
-            this.redraw();
+            var self = this;
+            self.redraw();
         });
     };
 

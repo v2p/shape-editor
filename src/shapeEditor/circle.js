@@ -1,4 +1,13 @@
-define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, Shape) {
+define([
+    'eve'
+    , 'shapeEditor/point'
+    , 'shapeEditor/shape'
+], function (
+    eve
+    , Point
+    , Shape
+) {
+    "use strict";
 
     /**
      * @param x
@@ -28,30 +37,31 @@ define(['eve', 'shapeEditor/point', 'shapeEditor/shape'], function (eve, Point, 
     };
 
     Circle.prototype.initRaphaelElement = function() {
+        var self = this;
         Shape.prototype.initRaphaelElement.apply(this, arguments);
 
-        eve.on(['shape', 'dragStart', this.id].join('.'), function(x, y, domEvent) {
-            this._tempPointX = this.centerPoint.x;
-            this._tempPointY = this.centerPoint.y;
+        eve.on(['shape', 'dragStart', this.id].join('.'), function(/*x, y, domEvent*/) {
+            self._tempPointX = self.centerPoint.x;
+            self._tempPointY = self.centerPoint.y;
         });
 
-        eve.on(['shape', 'dragProcess', this.id].join('.'), function(dx, dy, x, y, domEvent) {
+        eve.on(['shape', 'dragProcess', this.id].join('.'), function(dx, dy/*, x, y, domEvent*/) {
             var validX = Math.min(
-                Math.max(this._tempPointX + dx, this.radius),
-                this.raphaelPaper.width - this.radius
+                Math.max(self._tempPointX + dx, self.radius),
+                self.raphaelPaper.width - self.radius
             );
 
             var validY = Math.min(
-                Math.max(this._tempPointY + dy, this.radius),
-                this.raphaelPaper.height - this.radius
+                Math.max(self._tempPointY + dy, self.radius),
+                self.raphaelPaper.height - self.radius
             );
 
-            this.setCoords(validX, validY);
+            self.setCoords(validX, validY);
         });
 
-        eve.on(['shape', 'dragEnd', this.id].join('.'), function(x, y, domEvent) {
-            delete this._tempPointX;
-            delete this._tempPointY;
+        eve.on(['shape', 'dragEnd', this.id].join('.'), function(/*x, y, domEvent*/) {
+            delete self._tempPointX;
+            delete self._tempPointY;
         });
     };
 

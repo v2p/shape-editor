@@ -1,0 +1,11 @@
+{
+  "env": {
+    "browser": true,
+    "amd": true
+  },
+
+  "rules": {
+    "quotes": "single",
+    "no-underscore-dangle": 0
+  }
+}

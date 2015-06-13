@@ -1,4 +1,17 @@
-define(['eve',  'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/circle', 'shapeEditor/special/handle'], function (eve, EditableShape, Point, Circle, Handle) {
+define([
+    'eve'
+    , 'shapeEditor/editable/shape'
+    , 'shapeEditor/point'
+    , 'shapeEditor/circle'
+    , 'shapeEditor/special/handle'
+], function (
+    eve
+    , EditableShape
+    , Point
+    , Circle
+    , Handle
+) {
+    "use strict";
 
     /**
      * @param x
@@ -56,11 +69,12 @@ define(['eve',  'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/
     };
 
     EditableCircle.prototype.init = function() {
+        var self = this;
+
         EditableShape.prototype.init.apply(this, arguments);
 
         this.circle.addOnRaphaelPaper(this.raphaelPaper);
 
-        var self = this;
         for (var i = 0; i < this.resizeHandles.length; i++) {
             var resizeHandle = this.resizeHandles[i];
 
@@ -79,7 +93,7 @@ define(['eve',  'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/
 
                 return function() {
                     eve(['editableShape', 'handleClick', self.id].join('.'), self, resizeHandleInClosure);
-                }
+                };
             })());
         }
 

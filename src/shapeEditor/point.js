@@ -1,4 +1,9 @@
-define(['eve'], function (eve) {
+define([
+    'eve'
+], function (
+    eve
+) {
+    "use strict";
 
     /**
      * @param x

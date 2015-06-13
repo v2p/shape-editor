@@ -1,4 +1,17 @@
-define(['eve',  'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/polygon', 'shapeEditor/special/handle'], function (eve, EditableShape, Point, Polygon, Handle) {
+define([
+    'eve'
+    , 'shapeEditor/editable/shape'
+    , 'shapeEditor/point'
+    , 'shapeEditor/polygon'
+    , 'shapeEditor/special/handle'
+], function (
+    eve
+    , EditableShape
+    , Point
+    , Polygon
+    , Handle
+) {
+    "use strict";
 
     /**
      * @param {Array} [pointsData]
@@ -35,7 +48,7 @@ define(['eve',  'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/
 
         // combine points into pairs:
         for (var j = 1; j < pointsCount; j++) {
-            pointPairs.push([ points[j-1], points[j] ]);
+            pointPairs.push([ points[j - 1], points[j] ]);
         }
         // ... and don't forget to add pair from lastPoint and firstPoint:
         pointPairs.push([ points[pointsCount - 1], points[0] ]);
@@ -47,7 +60,7 @@ define(['eve',  'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/
                 point2 = pointPairs[k][1],
                 distance = pointsDistanceMap[point1.id] + pointsDistanceMap[point2.id];
 
-            if (k == 0) { // init nearestPair and minDistance:
+            if (k === 0) { // init nearestPair and minDistance:
                 nearestPointPairIndex = 0;
                 minDistance = distance;
             }
@@ -81,7 +94,7 @@ define(['eve',  'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/
         for(var i = 0; i < this.resizeHandles.length; i++) {
             var handle = this.resizeHandles[i];
 
-            if (handle.attachmentPoint.id == pointId) {
+            if (handle.attachmentPoint.id === pointId) {
                 handle.removeFromPaper();
             }
         }
@@ -98,7 +111,7 @@ define(['eve',  'shapeEditor/editable/shape', 'shapeEditor/point', 'shapeEditor/
             var handle = new Handle(point);
             handle.addOnRaphaelPaper(self.raphaelPaper);
 
-            eve.on(['handle', 'dragProcess', handle.id].join('.'), function(dx, dy, x, y, domEvent) {
+            eve.on(['handle', 'dragProcess', handle.id].join('.'), function(dx, dy, x, y/*, domEvent*/) {
                 self.resize(point.id, x, y);
             });
 
