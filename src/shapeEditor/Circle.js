@@ -1,7 +1,7 @@
 define([
     'eve'
-    , 'shapeEditor/point'
-    , 'shapeEditor/shape'
+    , './Point'
+    , './Shape'
 ], function (
     eve
     , Point

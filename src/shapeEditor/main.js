@@ -1,9 +1,9 @@
 define([
     'raphael'
     , 'eve'
-    , 'shapeEditor/editable/circle'
-    , 'shapeEditor/editable/rectangle'
-    , 'shapeEditor/editable/polygon'
+    , './editable/EditableCircle'
+    , './editable/EditableRectangle'
+    , './editable/EditablePolygon'
 ], function (
     Raphael
     , eve

@@ -1,12 +1,14 @@
 define([
     'eve'
-    , 'shapeEditor/editable/shape'
-    , 'shapeEditor/point'
-    , 'shapeEditor/circle'
-    , 'shapeEditor/special/handle'
+    , './EditableShape'
+
+    , '../Point'
+    , '../Circle'
+    , '../special/Handle'
 ], function (
     eve
     , EditableShape
+
     , Point
     , Circle
     , Handle
