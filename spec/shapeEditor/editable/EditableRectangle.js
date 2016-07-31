@@ -1,4 +1,4 @@
-define(['jasmine', 'shapeEditor/editable/rectangle'], function (jasmine, EditableRectangle) {
+define(['jasmine', 'shapeEditor/editable/EditableRectangle'], function (jasmine, EditableRectangle) {
 
     describe("Editable Rectangle public interface", function () {
         var editableRectangle;
