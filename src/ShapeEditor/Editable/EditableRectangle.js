@@ -1,12 +1,12 @@
 define([
-    'eve'
+    '../event'
     , './EditableShape'
 
     , '../Point'
     , '../Rectangle'
-    , '../special/Handle'
+    , '../Special/Handle'
 ], function (
-    eve
+    event
     , EditableShape
 
     , Point
@@ -180,7 +180,7 @@ define([
 
             handleElement.addOnRaphaelPaper(this.raphaelPaper);
 
-            eve.on(['handle', 'dragProcess', handleElement.id].join('.'), (function() {
+            event.on(['handle', 'dragProcess', handleElement.id], (function() {
                 var dispatcherInClosure = resizeDispatcher;
 
                 return function() {
@@ -188,29 +188,29 @@ define([
                 }
             })());
 
-            eve.on(['handle', 'dragEnd', handleElement.id].join('.'), function() {
-                eve(['editableShape', 'resizeEnd', self.id].join('.'), self, arguments);
+            event.on(['handle', 'dragEnd', handleElement.id], function() {
+                event.fire(['editableShape', 'resizeEnd', self.id], self, arguments);
             });
 
-            eve.on(['handle', 'click', handleElement.id].join('.'), (function() {
+            event.on(['handle', 'click', handleElement.id], (function() {
                 var handleElementInClosure = handleElement;
 
                 return function() {
-                    eve(['editableShape', 'handleClick', self.id].join('.'), self, handleElementInClosure);
+                    event.fire(['editableShape', 'handleClick', self.id], self, handleElementInClosure);
                 }
             })());
         }
 
-        eve.on(['point', 'setCoords', this.rectangle.topLeftPoint.id].join('.'), function() {
+        event.on(['point', 'setCoords', this.rectangle.topLeftPoint.id], function() {
             self.updateKeyPoints();
         });
 
-        eve.on(['shape', 'click', this.rectangle.id].join('.'), function() {
-            eve(['editableShape', 'click', self.id].join('.'), self, arguments);
+        event.on(['shape', 'click', this.rectangle.id], function() {
+            event.fire(['editableShape', 'click', self.id], self, arguments);
         });
 
-        eve.on(['shape', 'dragEnd', this.rectangle.id].join('.'), function() {
-            eve(['editableShape', 'dragEnd', self.id].join('.'), self, arguments);
+        event.on(['shape', 'dragEnd', this.rectangle.id], function() {
+            event.fire(['editableShape', 'dragEnd', self.id], self, arguments);
         });
     };
 

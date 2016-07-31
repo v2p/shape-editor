@@ -1,9 +1,9 @@
 define([
-    'eve'
+    './event'
     , './Point'
     , './Shape'
 ], function (
-    eve
+    event
     , Point
     , Shape
 ) {
@@ -48,7 +48,7 @@ define([
 
         this.points.splice(insertIndex, 0, point);
 
-        eve(['polygon', 'addPoint', this.id].join('.'), this, point);
+        event.fire(['polygon', 'addPoint', this.id], this, point);
     };
 
     Polygon.prototype.removePoint = function(pointId) {
@@ -57,14 +57,14 @@ define([
         this.points.splice(removeIndex, 1);
         this.redraw();
 
-        eve(['polygon', 'removePoint', this.id].join('.'), this);
+        event.fire(['polygon', 'removePoint', this.id], this);
     };
 
     Polygon.prototype.pushPoint = function(x, y) {
         var point = new Point(x, y);
         this.points.push(point);
 
-        eve(['polygon', 'addPoint', this.id].join('.'), this, point);
+        event.fire(['polygon', 'addPoint', this.id], this, point);
     };
 
     /**
@@ -102,7 +102,7 @@ define([
     Polygon.prototype.initRaphaelElement = function() {
         Shape.prototype.initRaphaelElement.apply(this, arguments);
 
-        eve.on(['shape', 'dragStart', this.id].join('.'), function(/*x, y, domEvent*/) {
+        event.on(['shape', 'dragStart', this.id], function(/*x, y, domEvent*/) {
             var self = this;
             var polygonBoundingBox = self.getBBox();
 
@@ -112,7 +112,7 @@ define([
             self._tempHeight = polygonBoundingBox.height;
         });
 
-        eve.on(['shape', 'dragProcess', this.id].join('.'), function(dx, dy/*, x, y, domEvent*/) {
+        event.on(['shape', 'dragProcess', this.id], function(dx, dy/*, x, y, domEvent*/) {
             var self = this;
 
             var validX = Math.min(
@@ -126,7 +126,7 @@ define([
             self.setCoords(validX, validY);
         });
 
-        eve.on(['shape', 'dragEnd', this.id].join('.'), function(/*x, y, domEvent*/) {
+        event.on(['shape', 'dragEnd', this.id], function(/*x, y, domEvent*/) {
             var self = this;
 
             delete self._tempPointX;
@@ -135,7 +135,7 @@ define([
             delete self._tempHeight;
         });
 
-        eve.on(['polygon', 'addPoint', this.id].join('.'), function() {
+        event.on(['polygon', 'addPoint', this.id], function() {
             var self = this;
             self.redraw();
         });

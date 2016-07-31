@@ -1,9 +1,9 @@
 define([
-    'eve'
+    '../event'
     , '../Point'
     , '../Shape'
 ], function (
-    eve
+    event
     , Point
     , Shape
 ) {
@@ -56,7 +56,7 @@ define([
             }
         );
 
-        eve.on(['shape', 'dragProcess', self.id].join('.'), function(dx, dy, x, y, domEvent) {
+        event.on(['shape', 'dragProcess', self.id], function(dx, dy, x, y, domEvent) {
 
             if (self.axisRestriction === 'x') {
                 dy = 0;
@@ -69,28 +69,28 @@ define([
             x = self._tempPointX + dx;
             y = self._tempPointY + dy;
 
-            eve(['handle', 'dragProcess', self.id].join('.'), self, dx, dy, x, y, domEvent);
+            event.fire(['handle', 'dragProcess', self.id], self, dx, dy, x, y, domEvent);
         });
 
-        eve.on(['shape', 'dragStart', self.id].join('.'), function(x, y, domEvent) {
+        event.on(['shape', 'dragStart', self.id], function(x, y, domEvent) {
             self._tempPointX = self.attachmentPoint.x;
             self._tempPointY = self.attachmentPoint.y;
 
-            eve(['handle', 'dragStart', self.id].join('.'), self, x, y, domEvent);
+            event.fire(['handle', 'dragStart', self.id], self, x, y, domEvent);
         });
 
-        eve.on(['shape', 'dragEnd', self.id].join('.'), function(x, y, domEvent) {
+        event.on(['shape', 'dragEnd', self.id], function(x, y, domEvent) {
             delete self._tempPointX;
             delete self._tempPointY;
 
-            eve(['handle', 'dragEnd', self.id].join('.'), self, x, y, domEvent);
+            event.fire(['handle', 'dragEnd', self.id], self, x, y, domEvent);
         });
 
-        eve.on(['shape', 'click', self.id].join('.'), function() {
-            eve(['handle', 'click', self.id].join('.'), self, arguments);
+        event.on(['shape', 'click', self.id], function() {
+            event.fire(['handle', 'click', self.id], self, arguments);
         });
 
-        eve.on(['point', 'setCoords', self.attachmentPoint.id].join('.'), function(x, y) {
+        event.on(['point', 'setCoords', self.attachmentPoint.id], function(x, y) {
             self.raphaelElement.attr({cx: x, cy: y});
         });
     };
@@ -100,9 +100,9 @@ define([
 
         this.attachmentPoint.remove();
 
-        eve.off(['handle', 'dragProcess', this.id].join('.'));
-        eve.off(['handle', 'dragStart', this.id].join('.'));
-        eve.off(['handle', 'dragEnd', this.id].join('.'));
+        event.off(['handle', 'dragProcess', this.id]);
+        event.off(['handle', 'dragStart', this.id]);
+        event.off(['handle', 'dragEnd', this.id]);
     };
 
     Handle.prototype.show = function() {

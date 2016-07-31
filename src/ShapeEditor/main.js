@@ -1,12 +1,12 @@
 define([
     'raphael'
-    , 'eve'
-    , './editable/EditableCircle'
-    , './editable/EditableRectangle'
-    , './editable/EditablePolygon'
+    , './event'
+    , './Editable/EditableCircle'
+    , './Editable/EditableRectangle'
+    , './Editable/EditablePolygon'
 ], function (
     Raphael
-    , eve
+    , event
     , EditableCircle
     , EditableRectangle
     , EditablePolygon
@@ -16,7 +16,7 @@ define([
     function bindEventHandlers(shapeObject) {
         var self = this;
 
-        eve.on(['editableShape', 'click', shapeObject.id].join('.'), function () {
+        event.on(['editableShape', 'click', shapeObject.id], function () {
             var targetShapeObject = this;
 
             if (self.eventHandlers.onShapeClick) {
@@ -24,7 +24,7 @@ define([
             }
         });
 
-        eve.on(['editableShape', 'dragEnd', shapeObject.id].join('.'), function () {
+        event.on(['editableShape', 'dragEnd', shapeObject.id], function () {
             var targetShapeObject = this;
 
             if (self.eventHandlers.onShapeDrag) {
@@ -32,7 +32,7 @@ define([
             }
         });
 
-        eve.on(['editableShape', 'resizeEnd', shapeObject.id].join('.'), function () {
+        event.on(['editableShape', 'resizeEnd', shapeObject.id], function () {
             var targetShapeObject = this;
 
             if (self.eventHandlers.onShapeResize) {
@@ -40,19 +40,19 @@ define([
             }
         });
 
-        eve.on(['editableShape', 'handleClick', shapeObject.id].join('.'), function (handle) {
+        event.on(['editableShape', 'handleClick', shapeObject.id], function (handle) {
             if (self.eventHandlers.onShapeHandleClick) {
                 self.eventHandlers.onShapeHandleClick.call(self, shapeObject, handle);
             }
         });
 
-        eve.on(['editableShape', 'addPoint', shapeObject.id].join('.'), function (point) {
+        event.on(['editableShape', 'addPoint', shapeObject.id], function (point) {
             if (self.eventHandlers.onShapeAddPoint) {
                 self.eventHandlers.onShapeAddPoint.call(self, shapeObject, point);
             }
         });
 
-        eve.on(['editableShape', 'removePoint', shapeObject.id].join('.'), function () {
+        event.on(['editableShape', 'removePoint', shapeObject.id], function () {
             if (self.eventHandlers.onShapeRemovePoint) {
                 self.eventHandlers.onShapeRemovePoint.call(self, shapeObject);
             }

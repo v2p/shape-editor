@@ -1,9 +1,9 @@
 define([
-    'eve'
+    './event'
     , './Point'
     , './Shape'
 ], function (
-    eve
+    event
     , Point
     , Shape
 ) {
@@ -40,12 +40,12 @@ define([
         var self = this;
         Shape.prototype.initRaphaelElement.apply(this, arguments);
 
-        eve.on(['shape', 'dragStart', this.id].join('.'), function(/*x, y, domEvent*/) {
+        event.on(['shape', 'dragStart', this.id], function(/*x, y, domEvent*/) {
             self._tempPointX = self.centerPoint.x;
             self._tempPointY = self.centerPoint.y;
         });
 
-        eve.on(['shape', 'dragProcess', this.id].join('.'), function(dx, dy/*, x, y, domEvent*/) {
+        event.on(['shape', 'dragProcess', this.id], function(dx, dy/*, x, y, domEvent*/) {
             var validX = Math.min(
                 Math.max(self._tempPointX + dx, self.radius),
                 self.raphaelPaper.width - self.radius
@@ -59,7 +59,7 @@ define([
             self.setCoords(validX, validY);
         });
 
-        eve.on(['shape', 'dragEnd', this.id].join('.'), function(/*x, y, domEvent*/) {
+        event.on(['shape', 'dragEnd', this.id], function(/*x, y, domEvent*/) {
             delete self._tempPointX;
             delete self._tempPointY;
         });

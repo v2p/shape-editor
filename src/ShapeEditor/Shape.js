@@ -1,7 +1,7 @@
 define([
-    'eve'
+    './event'
 ], function (
-    eve
+    event
 ) {
     "use strict";
 
@@ -53,39 +53,39 @@ define([
          */
         this.raphaelElement.drag(
             function(dx, dy, x, y, domEvent) {
-                eve(['shape', 'dragProcess', self.id].join('.'), self, dx, dy, x, y, domEvent);
+                event.fire(['shape', 'dragProcess', self.id], self, dx, dy, x, y, domEvent);
             },
             function(x, y, domEvent) {
-                eve(['shape', 'dragStart', self.id].join('.'), self, x, y, domEvent);
+                event.fire(['shape', 'dragStart', self.id], self, x, y, domEvent);
             },
             function(x, y, domEvent) {
-                eve(['shape', 'dragEnd', self.id].join('.'), self, x, y, domEvent);
+                event.fire(['shape', 'dragEnd', self.id], self, x, y, domEvent);
             }
         );
 
         this.raphaelElement.click(function() {
-            eve(['shape', 'click', self.id].join('.'), self);
+            event.fire(['shape', 'click', self.id], self);
         });
     };
 
     Shape.prototype.resize = function() {
-        eve(['shape', 'resize', this.id].join('.'), this, arguments);
+        event.fire(['shape', 'resize', this.id], this, arguments);
     };
 
     Shape.prototype.setCoords = function() {
-        eve(['shape', 'setCoords', this.id].join('.'), this, arguments);
+        event.fire(['shape', 'setCoords', this.id], this, arguments);
     };
 
     Shape.prototype.removeFromPaper = function() {
         this.raphaelElement.remove();
 
-        eve.off(['shape', 'dragProcess', this.id].join('.'));
-        eve.off(['shape', 'dragStart', this.id].join('.'));
-        eve.off(['shape', 'dragEnd', this.id].join('.'));
+        event.off(['shape', 'dragProcess', this.id]);
+        event.off(['shape', 'dragStart', this.id]);
+        event.off(['shape', 'dragEnd', this.id]);
 
-        eve.off(['shape', 'click', this.id].join('.'));
-        eve.off(['shape', 'resize', this.id].join('.'));
-        eve.off(['shape', 'setCoords', this.id].join('.'));
+        event.off(['shape', 'click', this.id]);
+        event.off(['shape', 'resize', this.id]);
+        event.off(['shape', 'setCoords', this.id]);
     };
 
     Shape.prototype.getData = function() {

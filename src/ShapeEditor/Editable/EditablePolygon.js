@@ -1,12 +1,12 @@
 define([
-    'eve'
+    '../event'
     , './EditableShape'
 
     , '../Point'
     , '../Polygon'
-    , '../special/Handle'
+    , '../Special/Handle'
 ], function (
-    eve
+    event
     , EditableShape
 
     , Point
@@ -113,16 +113,16 @@ define([
             var handle = new Handle(point);
             handle.addOnRaphaelPaper(self.raphaelPaper);
 
-            eve.on(['handle', 'dragProcess', handle.id].join('.'), function(dx, dy, x, y/*, domEvent*/) {
+            event.on(['handle', 'dragProcess', handle.id], function(dx, dy, x, y/*, domEvent*/) {
                 self.resize(point.id, x, y);
             });
 
-            eve.on(['handle', 'dragEnd', handle.id].join('.'), function() {
-                eve(['editableShape', 'resizeEnd', self.id].join('.'), self, arguments);
+            event.on(['handle', 'dragEnd', handle.id], function() {
+                event.fire(['editableShape', 'resizeEnd', self.id], self, arguments);
             });
 
-            eve.on(['handle', 'click', handle.id].join('.'), function() {
-                eve(['editableShape', 'handleClick', self.id].join('.'), self, handle);
+            event.on(['handle', 'click', handle.id], function() {
+                event.fire(['editableShape', 'handleClick', self.id], self, handle);
             });
 
             self.resizeHandles.push(handle);
@@ -132,22 +132,22 @@ define([
             onAddPointEventCallback(this.polygon.points[i]);
         }
 
-        eve.on(['polygon', 'addPoint', this.polygon.id].join('.'), function(point) {
+        event.on(['polygon', 'addPoint', this.polygon.id], function(point) {
             onAddPointEventCallback(point);
 
-            eve(['editableShape', 'addPoint', self.id].join('.'), self, point);
+            event.fire(['editableShape', 'addPoint', self.id], self, point);
         });
 
-        eve.on(['polygon', 'removePoint', this.polygon.id].join('.'), function() {
-            eve(['editableShape', 'removePoint', self.id].join('.'), self);
+        event.on(['polygon', 'removePoint', this.polygon.id], function() {
+            event.fire(['editableShape', 'removePoint', self.id], self);
         });
 
-        eve.on(['shape', 'click', this.polygon.id].join('.'), function() {
-            eve(['editableShape', 'click', self.id].join('.'), self, arguments);
+        event.on(['shape', 'click', this.polygon.id], function() {
+            event.fire(['editableShape', 'click', self.id], self, arguments);
         });
 
-        eve.on(['shape', 'dragEnd', this.polygon.id].join('.'), function() {
-            eve(['editableShape', 'dragEnd', self.id].join('.'), self, arguments);
+        event.on(['shape', 'dragEnd', this.polygon.id], function() {
+            event.fire(['editableShape', 'dragEnd', self.id], self, arguments);
         });
     };
 

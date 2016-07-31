@@ -1,4 +1,4 @@
-define(['jasmine', 'shapeEditor/editable/EditableCircle'], function (jasmine, EditableCircle) {
+define(['jasmine', 'ShapeEditor/Editable/EditableCircle'], function (jasmine, EditableCircle) {
 
     describe("Editable Circle public interface", function () {
         var editableCircle;

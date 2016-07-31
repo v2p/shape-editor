@@ -1,12 +1,12 @@
 define([
-    'eve'
+    '../event'
     , './EditableShape'
 
     , '../Point'
     , '../Circle'
-    , '../special/Handle'
+    , '../Special/Handle'
 ], function (
-    eve
+    event
     , EditableShape
 
     , Point
@@ -82,34 +82,34 @@ define([
 
             resizeHandle.addOnRaphaelPaper(this.raphaelPaper);
 
-            eve.on(['handle', 'dragProcess', resizeHandle.id].join('.'), function() {
+            event.on(['handle', 'dragProcess', resizeHandle.id], function() {
                 resizeDispatcher.apply(self, arguments);
             });
 
-            eve.on(['handle', 'dragEnd', resizeHandle.id].join('.'), function() {
-                eve(['editableShape', 'resizeEnd', self.id].join('.'), self, arguments);
+            event.on(['handle', 'dragEnd', resizeHandle.id], function() {
+                event.fire(['editableShape', 'resizeEnd', self.id], self, arguments);
             });
 
-            eve.on(['handle', 'click', resizeHandle.id].join('.'), (function() {
+            event.on(['handle', 'click', resizeHandle.id], (function() {
                 var resizeHandleInClosure = resizeHandle;
 
                 return function() {
-                    eve(['editableShape', 'handleClick', self.id].join('.'), self, resizeHandleInClosure);
+                    event.fire(['editableShape', 'handleClick', self.id], self, resizeHandleInClosure);
                 };
             })());
         }
 
         // work with centerPoint's event faster than with circle's event:
-        eve.on(['point', 'setCoords', this.circle.centerPoint.id].join('.'), function() {
+        event.on(['point', 'setCoords', this.circle.centerPoint.id], function() {
             self.updateKeyPoints();
         });
 
-        eve.on(['shape', 'click', this.circle.id].join('.'), function() {
-            eve(['editableShape', 'click', self.id].join('.'), self, arguments);
+        event.on(['shape', 'click', this.circle.id], function() {
+            event.fire(['editableShape', 'click', self.id], self, arguments);
         });
 
-        eve.on(['shape', 'dragEnd', this.circle.id].join('.'), function() {
-            eve(['editableShape', 'dragEnd', self.id].join('.'), self, arguments);
+        event.on(['shape', 'dragEnd', this.circle.id], function() {
+            event.fire(['editableShape', 'dragEnd', self.id], self, arguments);
         });
     };
 

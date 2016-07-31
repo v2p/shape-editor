@@ -1,7 +1,7 @@
 define([
-    'eve'
+    './event'
 ], function (
-    eve
+    event
 ) {
     "use strict";
 
@@ -30,7 +30,7 @@ define([
         this.x = x || 0;
         this.y = y || 0;
 
-        eve(['point', 'setCoords', this.id].join('.'), this, this.x, this.y);
+        event.fire(['point', 'setCoords', this.id], this, this.x, this.y);
     };
 
     /**
@@ -40,12 +40,12 @@ define([
     Point.prototype.move = function(dx, dy) {
         this.setCoords(this.x + dx, this.y + dy);
 
-        eve(['point', 'move', this.id].join('.'), this, dx, dy, this.x, this.y);
+        event.fire(['point', 'move', this.id], this, dx, dy, this.x, this.y);
     };
 
     Point.prototype.remove = function() {
-        eve.off(['point', 'setCoords', this.id].join('.'));
-        eve.off(['point', 'move', this.id].join('.'));
+        event.off(['point', 'setCoords', this.id]);
+        event.off(['point', 'move', this.id]);
     };
 
     return Point;

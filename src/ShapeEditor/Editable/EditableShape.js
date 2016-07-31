@@ -1,7 +1,7 @@
 define([
-    'eve'
+    '../event'
 ], function (
-    eve
+    event
 ) {
     "use strict";
 
@@ -35,8 +35,8 @@ define([
             this.resizeHandles[i].removeFromPaper();
         }
 
-        eve.off(['editableShape', 'click', this.id].join('.'));
-        eve.off(['editableShape', 'dragEnd', this.id].join('.'));
+        event.off(['editableShape', 'click', this.id]);
+        event.off(['editableShape', 'dragEnd', this.id]);
     };
 
     EditableShape.prototype.getData = function() {};
